@@ -13,6 +13,8 @@
 		1FC5713F1D09ABFC0001923B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1FC5713D1D09ABFC0001923B /* Main.storyboard */; };
 		1FC571411D09ABFC0001923B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1FC571401D09ABFC0001923B /* Assets.xcassets */; };
 		1FC571441D09ABFC0001923B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1FC571421D09ABFC0001923B /* LaunchScreen.storyboard */; };
+		1FC5714D1D09B0390001923B /* Constants.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FC5714C1D09B0390001923B /* Constants.m */; };
+		5AE9930C1E093C715A4C4731 /* Pods_LiveAgent.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F27DE5C41C60B4D052986E52 /* Pods_LiveAgent.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +28,11 @@
 		1FC571401D09ABFC0001923B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1FC571431D09ABFC0001923B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		1FC571451D09ABFC0001923B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		1FC5714B1D09B0390001923B /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
+		1FC5714C1D09B0390001923B /* Constants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Constants.m; sourceTree = "<group>"; };
+		5D4CD0D306BBB01B03DC56D2 /* Pods-LiveAgent.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LiveAgent.debug.xcconfig"; path = "Pods/Target Support Files/Pods-LiveAgent/Pods-LiveAgent.debug.xcconfig"; sourceTree = "<group>"; };
+		F27DE5C41C60B4D052986E52 /* Pods_LiveAgent.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_LiveAgent.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		FA484C77C4A184B0AF227E3F /* Pods-LiveAgent.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LiveAgent.release.xcconfig"; path = "Pods/Target Support Files/Pods-LiveAgent/Pods-LiveAgent.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -33,6 +40,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5AE9930C1E093C715A4C4731 /* Pods_LiveAgent.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -44,6 +52,8 @@
 			children = (
 				1FC571331D09ABFC0001923B /* LiveAgent */,
 				1FC571321D09ABFC0001923B /* Products */,
+				7EF900C8BE70517722127E9A /* Pods */,
+				20A5D37F559E50175E6553C0 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -67,6 +77,8 @@
 				1FC571421D09ABFC0001923B /* LaunchScreen.storyboard */,
 				1FC571451D09ABFC0001923B /* Info.plist */,
 				1FC571341D09ABFC0001923B /* Supporting Files */,
+				1FC5714B1D09B0390001923B /* Constants.h */,
+				1FC5714C1D09B0390001923B /* Constants.m */,
 			);
 			path = LiveAgent;
 			sourceTree = "<group>";
@@ -79,6 +91,23 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		20A5D37F559E50175E6553C0 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				F27DE5C41C60B4D052986E52 /* Pods_LiveAgent.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		7EF900C8BE70517722127E9A /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				5D4CD0D306BBB01B03DC56D2 /* Pods-LiveAgent.debug.xcconfig */,
+				FA484C77C4A184B0AF227E3F /* Pods-LiveAgent.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -86,9 +115,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1FC571481D09ABFC0001923B /* Build configuration list for PBXNativeTarget "LiveAgent" */;
 			buildPhases = (
+				3C059D8496D6B80C0C16636D /* [CP] Check Pods Manifest.lock */,
 				1FC5712D1D09ABFC0001923B /* Sources */,
 				1FC5712E1D09ABFC0001923B /* Frameworks */,
 				1FC5712F1D09ABFC0001923B /* Resources */,
+				B0017BF83517A7443710980B /* [CP] Embed Pods Frameworks */,
+				C31765D156414D6C3AFF7A4C /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -144,6 +176,54 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		3C059D8496D6B80C0C16636D /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		B0017BF83517A7443710980B /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-LiveAgent/Pods-LiveAgent-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		C31765D156414D6C3AFF7A4C /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-LiveAgent/Pods-LiveAgent-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		1FC5712D1D09ABFC0001923B /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -152,6 +232,7 @@
 				1FC5713C1D09ABFC0001923B /* ViewController.m in Sources */,
 				1FC571391D09ABFC0001923B /* AppDelegate.m in Sources */,
 				1FC571361D09ABFC0001923B /* main.m in Sources */,
+				1FC5714D1D09B0390001923B /* Constants.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -263,9 +344,11 @@
 		};
 		1FC571491D09ABFC0001923B /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 5D4CD0D306BBB01B03DC56D2 /* Pods-LiveAgent.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = LiveAgent/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.halid.LiveAgent;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -274,9 +357,11 @@
 		};
 		1FC5714A1D09ABFC0001923B /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = FA484C77C4A184B0AF227E3F /* Pods-LiveAgent.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = LiveAgent/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.halid.LiveAgent;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -302,6 +387,7 @@
 				1FC5714A1D09ABFC0001923B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
