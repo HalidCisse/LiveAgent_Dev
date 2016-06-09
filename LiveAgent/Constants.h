@@ -28,4 +28,18 @@ extern NSString *const ResyncSession_path;
 extern NSString *const ChasitorResyncState_path;
 extern NSString *const ChatMessage_path;
 
+
+
+
+
+
+//"sessionId": "8f1cfb18-fbd1-4487-90d9-e98c0a84e165",
+//"organizationId": "00D58000000OwMB",
+//"deploymentId": "57258000000L1mj",
+//"buttonId": "57358000000L24F",
+//
+//"userAgent": "",
+//"language": "en-US",
+//"screenResolution": "1900x1080",
+
 @end

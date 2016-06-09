@@ -12,6 +12,9 @@
 
 @interface ViewController ()
 
+- (IBAction)startChat:(UIButton *)sender;
+
+
 @property NSString* sessionId;
 @property NSString* sessionKey;
 @property NSString* sessionAffinityToken;
@@ -23,8 +26,6 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    [self GetSessionId];
 }
 
 - (void)GetSessionId {
@@ -45,13 +46,15 @@
                     return [c.responseData dictionaryFromJSONWithError:error];
                 }
            completionBlock:^(FSNConnection *json) {
-               NSDictionary *dictionary = (NSDictionary *)json.parseResult;
-               
-               _sessionId = [dictionary objectForKey:@"id"];
-               _sessionKey = [dictionary objectForKey:@"key"];
-               _sessionAffinityToken= [dictionary objectForKey:@"affinityToken"];
-               
-               [self chatRequest];
+               if (json.didSucceed) {
+                   NSDictionary *dictionary = (NSDictionary *)json.parseResult;
+                   
+                   _sessionId = [dictionary objectForKey:@"id"];
+                   _sessionKey = [dictionary objectForKey:@"key"];
+                   _sessionAffinityToken= [dictionary objectForKey:@"affinityToken"];
+                   
+                   [self chatRequest];
+               }
            } progressBlock:^(FSNConnection *c) {}];
     [connection start];
 }
@@ -60,16 +63,23 @@
     
     NSDictionary* headers    = [NSDictionary dictionaryWithObjectsAndKeys:
                                 self.sessionKey, X_LIVEAGENT_SESSION_KEY,
-                                self.sessionAffinityToken, X_LIVEAGENT_AFFINITY,
-                                @"null", X_LIVEAGENT_SEQUENCE,
+                                @"null", X_LIVEAGENT_AFFINITY,
+                                @"1", X_LIVEAGENT_SEQUENCE,
                                 API_V, X_LIVEAGENT_API_VERSION,
                                 nil];
     
+    NSDictionary *parameters =[NSDictionary dictionaryWithObjectsAndKeys:
+                               self.sessionKey, X_LIVEAGENT_SESSION_KEY,
+                               @"null", X_LIVEAGENT_AFFINITY,
+                               @"1", X_LIVEAGENT_SEQUENCE,
+                               API_V, X_LIVEAGENT_API_VERSION,
+                               nil];
+    
     FSNConnection *connection =
     [FSNConnection withUrl:[[NSURL alloc] initWithString:ChasitorInit_path]
-                    method:FSNRequestMethodGET
+                    method:FSNRequestMethodPOST
                    headers:headers
-                parameters:nil
+                parameters:parameters
                 parseBlock:^id(FSNConnection *c, NSError **error) {
                     return [c.responseData dictionaryFromJSONWithError:error];
                 }
@@ -77,9 +87,11 @@
                if (json.didSucceed) {
                    
                }
-           } progressBlock:^(FSNConnection *c) {}];
+           } progressBlock:nil];
     [connection start];
 }
 
-
+- (IBAction)startChat:(UIButton *)sender {
+    [self GetSessionId];
+}
 @end
