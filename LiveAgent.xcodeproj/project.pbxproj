@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1F30887E1D0ECFE4002AFB05 /* Trash.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F30887D1D0ECFE4002AFB05 /* Trash.m */; };
 		1FC571361D09ABFC0001923B /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FC571351D09ABFC0001923B /* main.m */; };
 		1FC571391D09ABFC0001923B /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FC571381D09ABFC0001923B /* AppDelegate.m */; };
 		1FC5713C1D09ABFC0001923B /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FC5713B1D09ABFC0001923B /* ViewController.m */; };
@@ -18,6 +19,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1F30887C1D0ECFE4002AFB05 /* Trash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Trash.h; sourceTree = "<group>"; };
+		1F30887D1D0ECFE4002AFB05 /* Trash.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Trash.m; sourceTree = "<group>"; };
 		1FC571311D09ABFC0001923B /* LiveAgent.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LiveAgent.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1FC571351D09ABFC0001923B /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		1FC571371D09ABFC0001923B /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -79,6 +82,8 @@
 				1FC571341D09ABFC0001923B /* Supporting Files */,
 				1FC5714B1D09B0390001923B /* Constants.h */,
 				1FC5714C1D09B0390001923B /* Constants.m */,
+				1F30887C1D0ECFE4002AFB05 /* Trash.h */,
+				1F30887D1D0ECFE4002AFB05 /* Trash.m */,
 			);
 			path = LiveAgent;
 			sourceTree = "<group>";
@@ -231,6 +236,7 @@
 			files = (
 				1FC5713C1D09ABFC0001923B /* ViewController.m in Sources */,
 				1FC571391D09ABFC0001923B /* AppDelegate.m in Sources */,
+				1F30887E1D0ECFE4002AFB05 /* Trash.m in Sources */,
 				1FC571361D09ABFC0001923B /* main.m in Sources */,
 				1FC5714D1D09B0390001923B /* Constants.m in Sources */,
 			);

@@ -23,11 +23,20 @@
  NSString *const Param_Language = @"language";
  NSString *const Param_ScreenResolution = @"screenResolution";
 
+ NSString *const Param_VisitorName = @"visitorName";
+ NSString *const Param_PrechatDetails = @"prechatDetails";
+ NSString *const Param_PrechatEntities = @"prechatEntities";
+ NSString *const Param_ReceiveQueueUpdates = @"receiveQueueUpdates";
+ NSString *const Param_IsPost = @"isPost";
+
  NSString *const LIVE_AGENT_ENDPOINT = @"https://d.la1-c1-frf.salesforceliveagent.com/chat/rest/";
  NSString *const ORG_ID = @"00D58000000OwMB";
  NSString *const DEPLOYEMENT_ID = @"57258000000L1mj";
  NSString *const BUTTON_ID = @"57358000000L24F";
  NSString *const API_V = @"37";
+
+
+
 
  NSString *const USER_AGENT = @"SCHNEIDER_IOS";
  NSString *const LANG = @"en-US";

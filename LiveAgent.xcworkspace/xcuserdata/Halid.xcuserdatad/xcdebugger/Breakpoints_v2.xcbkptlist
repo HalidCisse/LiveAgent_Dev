@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "LiveAgent/ViewController.m"
-            timestampString = "487261947.208777"
+            timestampString = "487510245.680051"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "114"
-            endingLineNumber = "114">
+            startingLineNumber = "129"
+            endingLineNumber = "129">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -24,43 +24,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "LiveAgent/ViewController.m"
-            timestampString = "487261947.208777"
+            timestampString = "487510245.680051"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "100"
-            endingLineNumber = "100"
-            landmarkName = "-requestChat"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "LiveAgent/ViewController.m"
-            timestampString = "487261947.208777"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "95"
-            endingLineNumber = "95"
-            landmarkName = "-requestChat"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "LiveAgent/ViewController.m"
-            timestampString = "487261810.858803"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "79"
-            endingLineNumber = "79"
+            startingLineNumber = "106"
+            endingLineNumber = "106"
             landmarkName = "-requestChat"
             landmarkType = "5">
          </BreakpointContent>

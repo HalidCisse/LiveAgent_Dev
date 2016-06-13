@@ -15,7 +15,6 @@
 
 - (IBAction)startChat:(UIButton *)sender;
 
-
 @property NSString* sessionId;
 @property NSString* sessionKey;
 @property NSString* sessionAffinityToken;
@@ -31,12 +30,11 @@
 
 - (void) requestSession {
     
-    NSDictionary* headers    = [NSDictionary dictionaryWithObjectsAndKeys:
-                         @"", X_LIVEAGENT_SESSION_KEY,
-                         @"null", X_LIVEAGENT_AFFINITY,
-                         @"null", X_LIVEAGENT_SEQUENCE,
-                         API_V, X_LIVEAGENT_API_VERSION,
-                        nil];
+    NSDictionary* headers    = @{ X_LIVEAGENT_SESSION_KEY : @"",
+                                  X_LIVEAGENT_AFFINITY    :@"null",
+                                  X_LIVEAGENT_SEQUENCE    : @"null" ,
+                                  X_LIVEAGENT_API_VERSION : API_V
+                                };
     
     FSNConnection *connection =
     [FSNConnection withUrl:[[NSURL alloc] initWithString:SessionId_path]
@@ -62,19 +60,28 @@
 
 - (void) requestChat {
     
-    NSDictionary *parameters =@{     Param_SessionId       :self.sessionId,
-                                     Param_OrganizationId  :ORG_ID,
-                                     Param_DeploymentId    :DEPLOYEMENT_ID,
-                                     Param_ButtonId        :BUTTON_ID,
-                                     Param_UserAgent       :USER_AGENT,
-                                     Param_Language        :LANG,
-                                     Param_ScreenResolution:SCREEN_RES,
-                                     @"visitorName"        :@"Test Visitor",
-                                     @"prechatDetails"     :@{},
-                                     @"prechatEntities"    :@{},
-                                     @"receiveQueueUpdates":@"true",
-                                     @"isPost"             :@"true"
+    NSDictionary *parameters =@{     Param_SessionId          :self.sessionId,
+                                     Param_OrganizationId     :ORG_ID,
+                                     Param_DeploymentId       :DEPLOYEMENT_ID,
+                                     Param_ButtonId           :BUTTON_ID,
+                                     Param_UserAgent          :USER_AGENT,
+                                     Param_Language           :LANG,
+                                     Param_ScreenResolution   :SCREEN_RES,
+                                     Param_VisitorName        :@"Test Visitor",
+                                     Param_PrechatDetails     :@[],
+                                     Param_PrechatEntities    :@[],
+                                     Param_ReceiveQueueUpdates:@YES,
+                                     Param_IsPost             :@YES
                                  };
+    
+    NSError *error;
+    NSData *data = [NSJSONSerialization dataWithJSONObject:parameters
+                                                       options:NSJSONWritingPrettyPrinted
+                                                         error:&error];
+    NSString *jsonData = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    
+    NSLog(@"POST Json : %@", parameters);
+    NSLog(@"POST Json : %@", jsonData);
     
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
     
@@ -83,12 +90,17 @@
     [serializer setValue:@"application/json" forHTTPHeaderField:@"Accept"];
     manager.requestSerializer = serializer;
     
+    manager.responseSerializer = [AFJSONResponseSerializer serializerWithReadingOptions:NSJSONReadingAllowFragments];
+    
+    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"text/plain",nil];
+    manager.responseSerializer = [AFJSONResponseSerializer serializer];
+//    manager.responseSerializer = [AFJSONResponseSerializer serializerWithReadingOptions:NSJSONReadingAllowFragments];
+    
     [manager.requestSerializer setValue:self.sessionKey forHTTPHeaderField:X_LIVEAGENT_SESSION_KEY];
     [manager.requestSerializer setValue:@"null" forHTTPHeaderField:X_LIVEAGENT_AFFINITY];
     [manager.requestSerializer setValue:@"1" forHTTPHeaderField:X_LIVEAGENT_SEQUENCE];
     [manager.requestSerializer setValue:API_V forHTTPHeaderField:X_LIVEAGENT_API_VERSION];
     
-    manager.responseSerializer = [AFHTTPResponseSerializer serializer];
     [manager POST:ChasitorInit_path parameters:parameters progress:nil
           success:^(NSURLSessionDataTask *task, id responseObject) {
               NSError* error;
@@ -97,10 +109,17 @@
                                                                      error:&error];
           } failure:^(NSURLSessionDataTask *task, NSError *error) {
               
-              NSLog(@"Error: %@", error);
+              if (task.response.statusCode == 200) {
+                  
+              } else {
+                  NSString* errResponse = [[NSString alloc] initWithData:(NSData *)error.userInfo[AFNetworkingOperationFailingURLResponseDataErrorKey] encoding:NSUTF8StringEncoding];
+                  
+                  NSLog(@"Error: %@", error);
+                  NSLog(@"response %@",errResponse);
+                  NSLog(@"response code %ld",task.response.statusCode);
+              }
           }];
 }
-
 
 - (IBAction)startChat:(UIButton *)sender {
     [self requestSession];

@@ -22,6 +22,11 @@ extern NSString *const Param_ButtonId;
 extern NSString *const Param_UserAgent;
 extern NSString *const Param_Language;
 extern NSString *const Param_ScreenResolution;
+extern NSString *const Param_VisitorName;
+extern NSString *const Param_PrechatDetails;
+extern NSString *const Param_PrechatEntities;
+extern NSString *const Param_ReceiveQueueUpdates;
+extern NSString *const Param_IsPost;
 
 extern NSString *const LIVE_AGENT_ENDPOINT;
 extern NSString *const ORG_ID;
