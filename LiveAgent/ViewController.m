@@ -13,7 +13,9 @@
 
 @interface ViewController ()
 
+@property (weak, nonatomic) IBOutlet UITextField *chatBox;
 - (IBAction)startChat:(UIButton *)sender;
+- (IBAction)chatSend:(id)sender;
 
 @property NSString* sessionId;
 @property NSString* sessionKey;
@@ -109,13 +111,11 @@
     
     [manager POST:ChasitorInit_path parameters:parameters progress:nil
           success:^(NSURLSessionDataTask *task, id responseObject) {
-              
               [self requestMessages];
 //              NSError* error;
 //              NSDictionary* json = [NSJSONSerialization JSONObjectWithData:responseObject
 //                                                                   options:kNilOptions
 //                                                                     error:&error];
-              
           } failure:^(NSURLSessionDataTask *task, NSError *error) {
               
               if (task.response.statusCode == 200 || task.response.statusCode == 204) {
@@ -131,7 +131,6 @@
 }
 
 - (void) requestMessages {
-    
     FSNConnection *connection =
     [FSNConnection withUrl:[[NSURL alloc] initWithString:Messages_path]
                     method:FSNRequestMethodGET
@@ -143,10 +142,7 @@
            completionBlock:^(FSNConnection *json) {
                if (json.didSucceed) {
                    NSDictionary *dictionary = (NSDictionary *)json.parseResult;
-                   
-                   //int sequence = [[dictionary objectForKey:@"sequence"] intValue] + 1;
-                   //_sessionSequence = [NSString stringWithFormat:@"%d", sequence];
-                   
+                  
                    NSArray* messages = [dictionary objectForKey:@"messages"];
                    NSDictionary *lastMessage = messages.firstObject;
                    
@@ -159,9 +155,19 @@
                        NSDictionary *ChatMessage = [lastMessage objectForKey:@"message"];
                        NSString *chat = [ChatMessage objectForKey:@"text"];
                        
-                       [self pushMessage:chat];
-                       
-                       NSLog(@"Chat message : %@" , chat);
+                       NSLog(@"New Chat message : %@" , chat);
+                   }
+                   
+                   if ([[lastMessage objectForKey:@"type"]  isEqual: @"AgentTyping"]) {
+                       NSLog(@"Chat AgentTyping");
+                   }
+                   
+                   if ([[lastMessage objectForKey:@"type"]  isEqual: @"AgentNotTyping"]) {
+                       NSLog(@"Chat AgentNotTyping");
+                   }
+                   
+                   if ([[lastMessage objectForKey:@"type"]  isEqual: @"ChatEnd"]) {
+                       NSLog(@"Chat end by agent");
                    }
                    
                    if (!self.hasEnded) {
@@ -169,9 +175,10 @@
                    }
                }else if (json.httpResponse.statusCode == 503 && !self.hasEnded){
                    [self ResyncSession];
-               } else
-               {
-                   
+               } else {
+                   if (!self.hasEnded) {
+                       [self requestMessages];
+                   }
                }
            } progressBlock:^(FSNConnection *c) {}];
     [connection start];
@@ -222,13 +229,10 @@
     [manager.requestSerializer setValue:API_V forHTTPHeaderField:X_LIVEAGENT_API_VERSION];
     
     [manager POST:ChatMessage_path parameters:@{@"text":chatMessage} progress:nil
-          success:^(NSURLSessionDataTask *task, id responseObject)
-          {
+          success:^(NSURLSessionDataTask *task, id responseObject){
               _sessionSequence = [NSString stringWithFormat:@"%d", _sessionSequence.intValue + 1];
-          } failure:^(NSURLSessionDataTask *task, NSError *error)
-          {
-              if (task.response.statusCode == 200 || task.response.statusCode == 204)
-              {
+          } failure:^(NSURLSessionDataTask *task, NSError *error){
+              if (task.response.statusCode == 200 || task.response.statusCode == 204){
                   _sessionSequence = [NSString stringWithFormat:@"%d", _sessionSequence.intValue + 1];
               } else if (task.response.statusCode == 503) {
                   [self ResyncSession];
@@ -247,10 +251,14 @@
               X_LIVEAGENT_AFFINITY    : self.sessionAffinityToken,
               X_LIVEAGENT_SEQUENCE    : self.sessionSequence,
               X_LIVEAGENT_API_VERSION : API_V
-              };
+            };
 }
 
 - (IBAction)startChat:(UIButton *)sender {
     [self requestSession];
+}
+
+- (IBAction)chatSend:(id)sender {
+    [self pushMessage:_chatBox.text];
 }
 @end
