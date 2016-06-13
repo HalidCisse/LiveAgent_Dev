@@ -29,7 +29,7 @@
     [super viewDidLoad];
     
     self.sessionAffinityToken = @"null";
-    self.sessionSequence    = @"null";
+    self.sessionSequence    = @"1";
     self.hasEnded = false;
 }
 
@@ -57,6 +57,7 @@
                    _sessionKey = [dictionary objectForKey:@"key"];
                    _sessionAffinityToken= [dictionary objectForKey:@"affinityToken"];
                    
+                   _sessionSequence = [NSString stringWithFormat:@"%d", _sessionSequence.intValue + 1];
                    [self requestChat];
                }
            } progressBlock:^(FSNConnection *c) {}];
@@ -65,7 +66,7 @@
 
 - (void) requestChat {
     
-    NSDictionary *parameters =@{     Param_SessionId          :self.sessionId,
+    NSDictionary *parameters = @{    Param_SessionId          :self.sessionId,
                                      Param_OrganizationId     :ORG_ID,
                                      Param_DeploymentId       :DEPLOYEMENT_ID,
                                      Param_ButtonId           :BUTTON_ID,
@@ -143,7 +144,9 @@
                if (json.didSucceed) {
                    NSDictionary *dictionary = (NSDictionary *)json.parseResult;
                    
-                   _sessionSequence = [[dictionary objectForKey:@"sequence"] description];
+                   //int sequence = [[dictionary objectForKey:@"sequence"] intValue] + 1;
+                   //_sessionSequence = [NSString stringWithFormat:@"%d", sequence];
+                   
                    NSArray* messages = [dictionary objectForKey:@"messages"];
                    NSDictionary *lastMessage = messages.firstObject;
                    
@@ -156,17 +159,20 @@
                        NSDictionary *ChatMessage = [lastMessage objectForKey:@"message"];
                        NSString *chat = [ChatMessage objectForKey:@"text"];
                        
+                       [self pushMessage:chat];
+                       
                        NSLog(@"Chat message : %@" , chat);
                    }
                    
-                   //NSLog(@"Messages responses : %@" , dictionary);
                    if (!self.hasEnded) {
                        [self requestMessages];
                    }
                }else if (json.httpResponse.statusCode == 503 && !self.hasEnded){
                    [self ResyncSession];
-               }
+               } else
+               {
                    
+               }
            } progressBlock:^(FSNConnection *c) {}];
     [connection start];
 }
@@ -194,6 +200,46 @@
                }
            } progressBlock:^(FSNConnection *c) {}];
     [connection start];
+}
+
+- (void) pushMessage:(NSString *)chatMessage {
+    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
+    
+    AFJSONRequestSerializer *serializer = [AFJSONRequestSerializer serializer];
+    [serializer setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    [serializer setValue:@"application/json" forHTTPHeaderField:@"Accept"];
+    manager.requestSerializer = serializer;
+    
+    manager.responseSerializer = [AFJSONResponseSerializer serializerWithReadingOptions:NSJSONReadingAllowFragments];
+    
+    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"text/plain",nil];
+    manager.responseSerializer = [AFJSONResponseSerializer serializer];
+    //    manager.responseSerializer = [AFJSONResponseSerializer serializerWithReadingOptions:NSJSONReadingAllowFragments];
+    
+    [manager.requestSerializer setValue:self.sessionKey forHTTPHeaderField:X_LIVEAGENT_SESSION_KEY];
+    [manager.requestSerializer setValue:self.sessionAffinityToken forHTTPHeaderField:X_LIVEAGENT_AFFINITY];
+    [manager.requestSerializer setValue:self.sessionSequence forHTTPHeaderField:X_LIVEAGENT_SEQUENCE];
+    [manager.requestSerializer setValue:API_V forHTTPHeaderField:X_LIVEAGENT_API_VERSION];
+    
+    [manager POST:ChatMessage_path parameters:@{@"text":chatMessage} progress:nil
+          success:^(NSURLSessionDataTask *task, id responseObject)
+          {
+              _sessionSequence = [NSString stringWithFormat:@"%d", _sessionSequence.intValue + 1];
+          } failure:^(NSURLSessionDataTask *task, NSError *error)
+          {
+              if (task.response.statusCode == 200 || task.response.statusCode == 204)
+              {
+                  _sessionSequence = [NSString stringWithFormat:@"%d", _sessionSequence.intValue + 1];
+              } else if (task.response.statusCode == 503) {
+                  [self ResyncSession];
+              } else {
+                  NSString* errResponse = [[NSString alloc] initWithData:(NSData *)error.userInfo[AFNetworkingOperationFailingURLResponseDataErrorKey] encoding:NSUTF8StringEncoding];
+                  
+                  NSLog(@"Error: %@", error);
+                  NSLog(@"response %@",errResponse);
+                  NSLog(@"response code %ld",task.response.statusCode);
+              }
+          }];
 }
 
 - (NSDictionary *)getHeaders {
