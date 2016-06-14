@@ -23,8 +23,8 @@
     [super viewDidLoad];
     
     self.title = @"Support client";
-    self.senderId = @"Me";
-    self.senderDisplayName = @"Halid";
+    self.senderId = @"customer";
+    self.senderDisplayName = @"Me";
     _messages = [[NSMutableArray alloc] init];
     
     [self setupBubbles];
@@ -58,6 +58,11 @@
 }
 
 - (void)didPressSendButton:(UIButton *)button withMessageText:(NSString *)text senderId:(NSString *)senderId senderDisplayName:(NSString *)senderDisplayName date:(NSDate *)date{
+    
+    [self PushMessage:senderId chat:text];
+}
+
+- (void)didPressAccessoryButton:(UIButton *)sender{
 }
 
 - (void) setupBubbles {
@@ -81,16 +86,28 @@
     return nil;
 }
 
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
+    JSQMessagesCollectionViewCell *cell = (JSQMessagesCollectionViewCell*) [super collectionView:collectionView cellForItemAtIndexPath:indexPath];
+    
+    JSQMessage *message = _messages[indexPath.item];
+    
+    if (message.senderId == self.senderId) {
+        cell.textView.textColor = UIColor.whiteColor;
+    } else {
+        cell.textView.textColor = UIColor.blackColor;
+    }
+    return cell;
+}
+
 - (void) PushMessage:(NSString*) senderId chat:(NSString*) chatMessage {
     JSQMessage *message = [[JSQMessage alloc] initWithSenderId:senderId senderDisplayName:@"" date:[NSDate date] text:chatMessage];
     [self.messages addObject:message];
-}
-
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+    
+    if (senderId == self.senderId) {
+        [self finishSendingMessage];
+    }else{
+        [self finishReceivingMessage];
+    }
 }
 
 @end

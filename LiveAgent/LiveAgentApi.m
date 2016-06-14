@@ -10,25 +10,35 @@
 
 @implementation LiveAgentApi
 
-static NSString *sessionId = 0;
-static NSString *sessionKey = 0;
-static NSString *sessionAffinityToken = 0;
-static NSString *sessionSequence = 0;
+static NSString *sessionId = @"";
+static NSString *sessionKey = @"";
+static NSString *sessionAffinityToken = @"null";
+static NSString *sessionSequence = @"null";
 static BOOL     *hasEnded = false;
+static NSMutableArray* messages;
+
 
 + (NSString *) sessionId { return sessionId; }
-+ (void) setSessionId:(NSString*)key { sessionId = key; }
++ (void) setSessionId:(NSString*)sId { self.sessionId = sId; }
 
 + (NSString *) sessionKey { return sessionKey; }
 + (void) setSessionKey:(NSString*)key { sessionKey = key; }
 
 + (NSString *) sessionAffinityToken { return sessionAffinityToken; }
-+ (void) setSessionAffinityToken:(NSString*)key { sessionAffinityToken = key; }
++ (void) setSessionAffinityToken:(NSString*)affinityToken { sessionAffinityToken = affinityToken; }
 
 + (NSString *) sessionSequence { return sessionSequence; }
-+ (void) setSessionSequence:(NSString*)key { sessionSequence = key; }
++ (void) setSessionSequence:(NSString*)sequence { sessionSequence = sequence; }
 
 + (BOOL *) hasEnded { return hasEnded; }
-+ (void) setHasEnded:(BOOL*)key { hasEnded = key; }
++ (void) setHasEnded:(BOOL*)ended { hasEnded = ended; }
+
++ (NSMutableArray*) messages { return messages; }
++ (void) setMessages:(NSMutableArray*)chatMessages { messages = chatMessages; }
+
+
+
+
+
 
 @end

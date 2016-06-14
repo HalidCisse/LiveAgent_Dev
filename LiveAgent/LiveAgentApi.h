@@ -11,18 +11,21 @@
 @interface LiveAgentApi : NSObject
 
 + (NSString *) sessionId;
-+ (void) setSessionId:(NSString *)key;
++ (void) setSessionId:(NSString *)sId;
 
 + (NSString *) sessionKey;
 + (void) setSessionKey:(NSString *)key;
 
 + (NSString *) sessionAffinityToken;
-+ (void) setSessionAffinityToken:(NSString *)key;
++ (void) setSessionAffinityToken:(NSString *)affinityToken;
 
 + (NSString *) sessionSequence;
-+ (void) setSessionSequence:(NSString *)key;
++ (void) setSessionSequence:(NSString *)sequence;
 
 + (BOOL *) hasEnded;
-+ (void) setHasEnded:(BOOL*)key;
++ (void) setHasEnded:(BOOL*)ended;
+
++ (NSMutableArray*) messages;
++ (void) setMessages:(NSMutableArray*)chatMessages;
 
 @end
