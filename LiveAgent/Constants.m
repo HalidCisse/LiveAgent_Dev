@@ -35,9 +35,6 @@
  NSString *const BUTTON_ID = @"57358000000L24F";
  NSString *const API_V = @"37";
 
-
-
-
  NSString *const USER_AGENT = @"SCHNEIDER_IOS";
  NSString *const LANG = @"en-US";
  NSString *const SCREEN_RES = @"1900x1080";

@@ -10,18 +10,23 @@
 #import <FSNetworking/FSNConnection.h>
 #import "Constants.h"
 #import "AFNetworking/AFNetworking.h"
+#import "LiveAgentApi.h"
 
 @interface ViewController ()
 
 @property (weak, nonatomic) IBOutlet UITextField *chatBox;
 - (IBAction)startChat:(UIButton *)sender;
 - (IBAction)chatSend:(id)sender;
+- (IBAction)showChatView:(id)sender;
+
 
 @property NSString* sessionId;
 @property NSString* sessionKey;
 @property NSString* sessionAffinityToken;
 @property NSString* sessionSequence;
 @property BOOL* hasEnded;
+
+@property NSArray* messages;
 
 @end
 
@@ -33,6 +38,10 @@
     self.sessionAffinityToken = @"null";
     self.sessionSequence    = @"1";
     self.hasEnded = false;
+    
+    _messages = @[];
+    
+    LiveAgentApi.sessionKey = @"";
 }
 
 - (void) requestSession {
@@ -75,7 +84,7 @@
                                      Param_UserAgent          :USER_AGENT,
                                      Param_Language           :LANG,
                                      Param_ScreenResolution   :SCREEN_RES,
-                                     Param_VisitorName        :@"Test Visitor",
+                                     Param_VisitorName        :@"Customer 1",
                                      Param_PrechatDetails     :@[],
                                      Param_PrechatEntities    :@[],
                                      Param_ReceiveQueueUpdates:@YES,
@@ -146,8 +155,16 @@
                    NSArray* messages = [dictionary objectForKey:@"messages"];
                    NSDictionary *lastMessage = messages.firstObject;
                    
+                   NSLog(@"%@", [lastMessage objectForKey:@"type"]);
+                   
                    if ([[lastMessage objectForKey:@"type"]  isEqual: @"ChatRequestSuccess"]) {
                        [self requestMessages];
+                       return;
+                   }
+                   
+                   if ([[lastMessage objectForKey:@"type"]  isEqual: @"ChatRequestFail"]) {
+                       
+                       //failed do something
                        return;
                    }
                    
@@ -260,5 +277,8 @@
 
 - (IBAction)chatSend:(id)sender {
     [self pushMessage:_chatBox.text];
+}
+
+- (IBAction)showChatView:(id)sender {
 }
 @end

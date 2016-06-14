@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		1F30887E1D0ECFE4002AFB05 /* Trash.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F30887D1D0ECFE4002AFB05 /* Trash.m */; };
+		1F3088811D0F0895002AFB05 /* ChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F3088801D0F0895002AFB05 /* ChatViewController.m */; };
+		1F3088841D0F0F91002AFB05 /* LiveAgentApi.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F3088831D0F0F91002AFB05 /* LiveAgentApi.m */; };
 		1FC571361D09ABFC0001923B /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FC571351D09ABFC0001923B /* main.m */; };
 		1FC571391D09ABFC0001923B /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FC571381D09ABFC0001923B /* AppDelegate.m */; };
 		1FC5713C1D09ABFC0001923B /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FC5713B1D09ABFC0001923B /* ViewController.m */; };
@@ -21,6 +23,10 @@
 /* Begin PBXFileReference section */
 		1F30887C1D0ECFE4002AFB05 /* Trash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Trash.h; sourceTree = "<group>"; };
 		1F30887D1D0ECFE4002AFB05 /* Trash.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Trash.m; sourceTree = "<group>"; };
+		1F30887F1D0F0895002AFB05 /* ChatViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatViewController.h; sourceTree = "<group>"; };
+		1F3088801D0F0895002AFB05 /* ChatViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChatViewController.m; sourceTree = "<group>"; };
+		1F3088821D0F0F90002AFB05 /* LiveAgentApi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LiveAgentApi.h; sourceTree = "<group>"; };
+		1F3088831D0F0F91002AFB05 /* LiveAgentApi.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LiveAgentApi.m; sourceTree = "<group>"; };
 		1FC571311D09ABFC0001923B /* LiveAgent.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LiveAgent.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1FC571351D09ABFC0001923B /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		1FC571371D09ABFC0001923B /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -84,6 +90,10 @@
 				1FC5714C1D09B0390001923B /* Constants.m */,
 				1F30887C1D0ECFE4002AFB05 /* Trash.h */,
 				1F30887D1D0ECFE4002AFB05 /* Trash.m */,
+				1F30887F1D0F0895002AFB05 /* ChatViewController.h */,
+				1F3088801D0F0895002AFB05 /* ChatViewController.m */,
+				1F3088821D0F0F90002AFB05 /* LiveAgentApi.h */,
+				1F3088831D0F0F91002AFB05 /* LiveAgentApi.m */,
 			);
 			path = LiveAgent;
 			sourceTree = "<group>";
@@ -234,8 +244,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1F3088841D0F0F91002AFB05 /* LiveAgentApi.m in Sources */,
 				1FC5713C1D09ABFC0001923B /* ViewController.m in Sources */,
 				1FC571391D09ABFC0001923B /* AppDelegate.m in Sources */,
+				1F3088811D0F0895002AFB05 /* ChatViewController.m in Sources */,
 				1F30887E1D0ECFE4002AFB05 /* Trash.m in Sources */,
 				1FC571361D09ABFC0001923B /* main.m in Sources */,
 				1FC5714D1D09B0390001923B /* Constants.m in Sources */,
