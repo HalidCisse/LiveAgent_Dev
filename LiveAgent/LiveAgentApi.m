@@ -7,6 +7,7 @@
 //
 
 #import "LiveAgentApi.h"
+#import "Constants.h"
 
 @implementation LiveAgentApi
 
@@ -17,9 +18,8 @@ static NSString *sessionSequence = @"null";
 static BOOL     *hasEnded = false;
 static NSMutableArray* messages;
 
-
 + (NSString *) sessionId { return sessionId; }
-+ (void) setSessionId:(NSString*)sId { self.sessionId = sId; }
++ (void) setSessionId:(NSString*)sId { sessionId = sId; }
 
 + (NSString *) sessionKey { return sessionKey; }
 + (void) setSessionKey:(NSString*)key { sessionKey = key; }
@@ -37,6 +37,14 @@ static NSMutableArray* messages;
 + (void) setMessages:(NSMutableArray*)chatMessages { messages = chatMessages; }
 
 
+
++ (NSDictionary *)getHeaders {
+    return @{ X_LIVEAGENT_SESSION_KEY : sessionKey,
+              X_LIVEAGENT_AFFINITY    : sessionAffinityToken,
+              X_LIVEAGENT_SEQUENCE    : sessionSequence,
+              X_LIVEAGENT_API_VERSION : API_V
+              };
+}
 
 
 

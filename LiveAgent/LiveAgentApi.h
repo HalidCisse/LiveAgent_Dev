@@ -28,4 +28,6 @@
 + (NSMutableArray*) messages;
 + (void) setMessages:(NSMutableArray*)chatMessages;
 
++ (NSDictionary *)getHeaders;
+
 @end

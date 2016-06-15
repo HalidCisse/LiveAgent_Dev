@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="oPl-Wg-obi">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="Yey-sF-31M">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
@@ -41,7 +41,6 @@
                                 <state key="normal" title="Go to chat view"/>
                                 <connections>
                                     <action selector="showChatView:" destination="BYZ-38-t0r" eventType="touchUpInside" id="7Ba-Qy-zin"/>
-                                    <segue destination="y6X-jc-ESc" kind="show" id="pgx-LB-kBF"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -55,6 +54,55 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="3026" y="297"/>
+        </scene>
+        <!--Chat Request Controller-->
+        <scene sceneID="JVc-C6-9vh">
+            <objects>
+                <viewController storyboardIdentifier="ChatRequestController" id="726-Uz-qBA" customClass="ChatRequestController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="dOd-1s-vDl"/>
+                        <viewControllerLayoutGuide type="bottom" id="AIx-pH-2gW"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="Oab-0Z-fU2">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="spH-dH-EVA">
+                                <rect key="frame" x="201" y="285" width="199" height="30"/>
+                                <state key="normal" title="Request a chat with an agent"/>
+                                <connections>
+                                    <action selector="requestChat:" destination="726-Uz-qBA" eventType="touchUpInside" id="apH-rA-esh"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="request status" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yz4-Q7-Icl">
+                                <rect key="frame" x="245" y="323" width="110" height="35"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="110" id="F5C-ud-y5a"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="10"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="AIx-pH-2gW" firstAttribute="top" secondItem="yz4-Q7-Icl" secondAttribute="bottom" constant="242" id="1sR-bC-Z2P"/>
+                            <constraint firstItem="spH-dH-EVA" firstAttribute="centerX" secondItem="Oab-0Z-fU2" secondAttribute="centerX" id="8z7-6z-MBi"/>
+                            <constraint firstItem="spH-dH-EVA" firstAttribute="centerY" secondItem="Oab-0Z-fU2" secondAttribute="centerY" id="RwI-gi-P8x"/>
+                            <constraint firstItem="spH-dH-EVA" firstAttribute="centerX" secondItem="yz4-Q7-Icl" secondAttribute="centerX" id="a6y-ZO-Rqm"/>
+                            <constraint firstItem="yz4-Q7-Icl" firstAttribute="top" secondItem="spH-dH-EVA" secondAttribute="bottom" constant="8" symbolic="YES" id="gt9-Gz-wC0"/>
+                            <constraint firstItem="spH-dH-EVA" firstAttribute="top" secondItem="dOd-1s-vDl" secondAttribute="bottom" constant="221" id="uF5-Fl-Idb"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="7fB-nv-yt9"/>
+                    <connections>
+                        <outlet property="requestStatus" destination="yz4-Q7-Icl" id="L2o-bI-nqN"/>
+                        <segue destination="y6X-jc-ESc" kind="show" identifier="ChatViewController" id="1Ha-th-hUq"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="LyW-ug-DeH" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3026" y="1027"/>
         </scene>
         <!--Chat View Controller-->
         <scene sceneID="Abt-21-Rwz">
@@ -72,7 +120,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="puw-XI-H2T" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3804" y="297"/>
+            <point key="canvasLocation" x="3835" y="1027"/>
         </scene>
         <!--Item-->
         <scene sceneID="MK4-Vj-J15">
@@ -92,6 +140,24 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Uu5-XQ-B1n" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2214" y="297"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="OVu-yE-skh">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Yey-sF-31M" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="gj7-Cc-vks">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="726-Uz-qBA" kind="relationship" relationship="rootViewController" id="zbh-1k-pUW"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="pcA-dy-8ih" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2214" y="1027"/>
         </scene>
     </scenes>
 </document>

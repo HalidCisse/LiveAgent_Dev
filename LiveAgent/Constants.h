@@ -37,6 +37,7 @@ extern NSString *const USER_AGENT;
 extern NSString *const LANG;
 extern NSString *const SCREEN_RES;
 
+extern NSString *const Availability_path;
 extern NSString *const SessionId_path;
 extern NSString *const ChasitorInit_path;
 extern NSString *const Messages_path;

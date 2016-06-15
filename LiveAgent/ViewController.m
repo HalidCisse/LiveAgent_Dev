@@ -24,7 +24,7 @@
 @property NSString* sessionKey;
 @property NSString* sessionAffinityToken;
 @property NSString* sessionSequence;
-@property BOOL* hasEnded;
+@property BOOL*     hasEnded;
 
 @property NSArray* messages;
 
@@ -158,6 +158,11 @@
                    NSLog(@"%@", [lastMessage objectForKey:@"type"]);
                    
                    if ([[lastMessage objectForKey:@"type"]  isEqual: @"ChatRequestSuccess"]) {
+                       [self requestMessages];
+                       return;
+                   }
+                   
+                   if ([[lastMessage objectForKey:@"type"]  isEqual: @"ChatEstablished"]) {
                        [self requestMessages];
                        return;
                    }
