@@ -14,22 +14,25 @@ PODS:
   - AFNetworking/Serialization (3.1.0)
   - AFNetworking/UIKit (3.1.0):
     - AFNetworking/NSURLSession
+  - CCActivityHUD (2.1.1)
   - FSNetworking (0.0.1)
-  - JSQMessagesViewController (7.3.2):
+  - JSQMessagesViewController (7.3.3):
     - JSQSystemSoundPlayer (~> 2.0.1)
   - JSQSystemSoundPlayer (2.0.1)
 
 DEPENDENCIES:
   - AFNetworking (~> 3.0)
+  - CCActivityHUD
   - FSNetworking
   - JSQMessagesViewController
 
 SPEC CHECKSUMS:
   AFNetworking: 5e0e199f73d8626b11e79750991f5d173d1f8b67
+  CCActivityHUD: 861086c688dfb34012ea4e249fd6320026440017
   FSNetworking: 596048151bffc5917b2bcfa3a840624f49e309fa
-  JSQMessagesViewController: bf14e4d644e1c59476f47f2f8410c34c6c0294f3
+  JSQMessagesViewController: 0ee3f80237268192a3e8337fd0d787f1a1bf5a7a
   JSQSystemSoundPlayer: c5850e77a4363ffd374cd851154b9af93264ed8d
 
-PODFILE CHECKSUM: 6129ea8fc89b40d8584365467cd5208c6f37de61
+PODFILE CHECKSUM: de3d18782abed89ea2a7e49560a8e25a6e7d2559
 
 COCOAPODS: 1.0.1

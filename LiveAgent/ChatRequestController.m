@@ -12,17 +12,19 @@
 #import <FSNetworking/FSNConnection.h>
 #import "Constants.h"
 #import "AFNetworking/AFNetworking.h"
+#import <CCActivityHUD/CCActivityHUD.h>
+#import "ChatViewController.h"
 
 @interface ChatRequestController ()
 
 - (IBAction)requestChat:(id)sender;
 @property (weak, nonatomic) IBOutlet UILabel *requestStatus;
+@property bool statusResolved;
+@property CCActivityHUD *activityHUD;
 
 @end
 
 @implementation ChatRequestController
-
-bool statusResolved;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -32,7 +34,7 @@ bool statusResolved;
 
 - (void)viewDidAppear:(BOOL)animated{
     LiveAgentApi.hasEnded = true;
-    statusResolved = false;
+    _statusResolved = false;
 }
 
 - (void) setUp {
@@ -46,6 +48,8 @@ bool statusResolved;
     LiveAgentApi.sessionSequence      = @"1";
     LiveAgentApi.hasEnded             = false;
     LiveAgentApi.messages             = [[NSMutableArray alloc] init];
+    
+    _activityHUD = [CCActivityHUD new];
 }
 
 - (void) requestSession {
@@ -54,7 +58,7 @@ bool statusResolved;
                                   X_LIVEAGENT_AFFINITY    : @"null",
                                   X_LIVEAGENT_SEQUENCE    : @"null" ,
                                   X_LIVEAGENT_API_VERSION : API_V
-                                  };
+                                 };
     
     FSNConnection *connection =
     [FSNConnection withUrl:[[NSURL alloc] initWithString:SessionId_path]
@@ -145,10 +149,11 @@ bool statusResolved;
 
 - (void) updateStatus {
     
-    if (statusResolved) {
+    if (_statusResolved) {
         return;
     }
     
+    [self.activityHUD showWithText:@"waiting for an agent..." shimmering:YES];
     FSNConnection *connection =
     [FSNConnection withUrl:[[NSURL alloc] initWithString:Messages_path]
                     method:FSNRequestMethodGET
@@ -171,15 +176,21 @@ bool statusResolved;
                    }
                    
                    if ([[lastMessage objectForKey:@"type"]  isEqual: @"ChatEstablished"]) {
-                       statusResolved = true;
+                       [self.activityHUD dismiss];
+                       _statusResolved = true;
                        
                        [self performSegueWithIdentifier:@"ChatViewController" sender:self];
                    }
                    
+                   if ([[lastMessage objectForKey:@"type"]  isEqual: @"QueueUpdate"]) {
+                       [self.activityHUD dismiss];
+                       [self.activityHUD showWithProgress];
+                   }
+                   
                    if ([[lastMessage objectForKey:@"type"]  isEqual: @"ChatRequestFail"]) {
-                       statusResolved = true;
+                       _statusResolved = true;
                        
-                       _requestStatus.text = @"ChatRequestFail";
+                       [self.activityHUD dismissWithText:@"chat request failed." delay:0.7 success:NO];
                    }
                    
                    [self updateStatus];
@@ -193,15 +204,17 @@ bool statusResolved;
 }
 
 - (void) checkAvailability {
+    
+    [self.activityHUD showWithText:@"connecting..." shimmering:YES];
     FSNConnection *connection =
     [FSNConnection withUrl:[[NSURL alloc] initWithString:Availability_path]
                     method:FSNRequestMethodGET
                    headers:@{ X_LIVEAGENT_API_VERSION : API_V}
                 parameters:@{
-                              @"org_id"           : ORG_ID,
-                              @"deployment_id"    : DEPLOYEMENT_ID,
-                              @"Availability.ids" : BUTTON_ID
-                            }
+                             @"org_id"           : ORG_ID,
+                             @"deployment_id"    : DEPLOYEMENT_ID,
+                             @"Availability.ids" : BUTTON_ID
+                             }
                 parseBlock:^id(FSNConnection *c, NSError **error) {
                     return [c.responseData dictionaryFromJSONWithError:error];
                 }
@@ -212,18 +225,20 @@ bool statusResolved;
                    NSArray* messages = [dictionary objectForKey:@"messages"];
                    NSDictionary *lastMessage = messages.firstObject;
                    
-                   NSArray* events = [lastMessage objectForKey:@"message"];
-                   NSDictionary *results = events.firstObject;
+                   NSDictionary* message = [lastMessage objectForKey:@"message"];
+                   NSArray* results = [message objectForKey:@"results"];
                    
-                   bool isAvailable = [results objectForKey:@"isAvailable"];
+                   NSDictionary *availability = results.firstObject;
                    
-                   if ((bool)[lastMessage objectForKey:@"isAvailable"] == true) {
+                   if ((bool)[availability objectForKey:@"isAvailable"]) {
                        [self updateStatus];
                    } else {
-                       _requestStatus.text = @"no agent is currently online.";
+                       dispatch_async(dispatch_get_main_queue(), ^{
+                           [self.activityHUD dismissWithText:@"no agent is currently online." delay:0.7 success:NO];
+                       });
                    }
                } else {
-                   _requestStatus.text = @"can not connect.";
+                   [self.activityHUD dismissWithText:@"can not connect." delay:0.7 success:NO];
                }
            } progressBlock:^(FSNConnection *c) {}];
     [connection start];
@@ -233,9 +248,17 @@ bool statusResolved;
     [self requestSession];
 }
 
- - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-  
- }
+- (void)didDismissModalControllerDelegate:(ChatViewController *)viewController{
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
 
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    if ([segue.identifier isEqualToString:@"ChatViewController"]) {
+        UINavigationController *navigator = segue.destinationViewController;
+        ChatViewController *chatView = (ChatViewController *)navigator.topViewController;
+        chatView.delegateModal = self;
+    }
+}
 
 @end

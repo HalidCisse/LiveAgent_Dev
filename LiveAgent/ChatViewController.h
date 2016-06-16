@@ -9,7 +9,15 @@
 #import <UIKit/UIKit.h>
 #import "JSQMessages.h"
 
-@interface ChatViewController : JSQMessagesViewController
+@class ChatViewController;
 
+@protocol ModalControllerDelegate <NSObject>
+
+- (void)didDismissModalControllerDelegate:(ChatViewController *)viewController;
+
+@end
+
+@interface ChatViewController : JSQMessagesViewController
+@property (weak, nonatomic) id<ModalControllerDelegate> delegateModal;
 
 @end

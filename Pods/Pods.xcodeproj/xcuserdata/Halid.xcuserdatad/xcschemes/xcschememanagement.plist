@@ -9,6 +9,11 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>CCActivityHUD.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>FSNetworking.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -42,17 +47,22 @@
 			<key>primary</key>
 			<true/>
 		</dict>
+		<key>318EE9B92AB78BD3939E21D31C870F5C</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>59CDDB315DD2B098E0CD9ED56B026F4B</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>916A5D980021A9967A822C71E4AE49AA</key>
+		<key>A6E0B4CA899E045FA7E7C338998D6B47</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>A6E0B4CA899E045FA7E7C338998D6B47</key>
+		<key>BE2BAFA1E57A63F24C8D7CE58B925B4C</key>
 		<dict>
 			<key>primary</key>
 			<true/>

@@ -7,7 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "ChatViewController.h"
 
-@interface ChatRequestController : UIViewController
+@interface ChatRequestController : UIViewController <ModalControllerDelegate>
 
 @end

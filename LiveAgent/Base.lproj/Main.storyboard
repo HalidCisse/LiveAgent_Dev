@@ -97,7 +97,7 @@
                     <navigationItem key="navigationItem" id="7fB-nv-yt9"/>
                     <connections>
                         <outlet property="requestStatus" destination="yz4-Q7-Icl" id="L2o-bI-nqN"/>
-                        <segue destination="y6X-jc-ESc" kind="show" identifier="ChatViewController" id="1Ha-th-hUq"/>
+                        <segue destination="0x6-c7-oZp" kind="presentation" identifier="ChatViewController" id="1Ha-th-hUq"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="LyW-ug-DeH" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -117,10 +117,11 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
+                    <navigationItem key="navigationItem" id="btn-W1-kQP"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="puw-XI-H2T" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3835" y="1027"/>
+            <point key="canvasLocation" x="4647" y="1027"/>
         </scene>
         <!--Item-->
         <scene sceneID="MK4-Vj-J15">
@@ -158,6 +159,24 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="pcA-dy-8ih" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2214" y="1027"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="dqj-5P-mVT">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="0x6-c7-oZp" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="etr-hh-7qK">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="y6X-jc-ESc" kind="relationship" relationship="rootViewController" id="lS8-Vs-0uU"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="A9y-fi-7U9" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3835" y="1027"/>
         </scene>
     </scenes>
 </document>

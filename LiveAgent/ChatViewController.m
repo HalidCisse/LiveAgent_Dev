@@ -12,12 +12,13 @@
 #import <FSNetworking/FSNConnection.h>
 #import "Constants.h"
 #import "AFNetworking/AFNetworking.h"
+#import <CCActivityHUD/CCActivityHUD.h>
 
 @interface ChatViewController ()
 
-//@property NSMutableArray *messages;
   @property JSQMessagesBubbleImage *outgoingBubbleImageView;
   @property JSQMessagesBubbleImage *incomingBubbleImageView;
+  @property CCActivityHUD *activityHUD;
 
 @end
 
@@ -30,6 +31,12 @@
     [self pullMessages];
 }
 
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:YES];
+    [self.inputToolbar.contentView.textView becomeFirstResponder];
+}
+
 - (void) setUp {
     self.title             = @"Support client";
     self.senderId          = @"customer";
@@ -40,7 +47,23 @@
     self.collectionView.collectionViewLayout.incomingAvatarViewSize = CGSizeZero;
     self.collectionView.collectionViewLayout.outgoingAvatarViewSize = CGSizeZero;
     
-    //self.inputToolbar.contentView.backgroundColor = UIColor.blackColor;
+    self.inputToolbar.contentView.leftBarButtonItem = nil;
+    _activityHUD = [CCActivityHUD new];
+    
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemStop
+                                                                                          target:self
+                                                                                          action:@selector(closePressed:)];
+}
+
+- (void) deactivateChat {
+    self.inputToolbar.contentView.rightBarButtonItem = nil;
+    _activityHUD = [CCActivityHUD new];
+    self.inputToolbar.contentView.textView.text = @"#chat closed";
+    self.inputToolbar.contentView.textView.editable = false;
+    LiveAgentApi.hasEnded = true;
+    
+    [self.activityHUD showWithText:@"chat ended by the agent." shimmering:false];
+    [self.activityHUD dismissWithText:@"chat ended by the agent." delay:0.5 success:YES];
 }
 
 - (id<JSQMessageData>)collectionView:(JSQMessagesCollectionView *)collectionView messageDataForItemAtIndexPath:(NSIndexPath *)indexPath{
@@ -176,9 +199,10 @@
                        NSLog(@"Chat AgentNotTyping");
                    }
                    
-                   if ([[lastMessage objectForKey:@"type"]  isEqual: @"ChatEnd"]) {
+                   if ([[lastMessage objectForKey:@"type"]  isEqual: @"ChatEnded"]) {
                        NSLog(@"Chat end by agent");
-                       LiveAgentApi.hasEnded = true;
+                       
+                       [self deactivateChat];
                    }
                    
                    [self pullMessages];
@@ -256,6 +280,10 @@
           }];
 }
 
-
+- (void)closePressed:(UIBarButtonItem *)sender
+{
+    [self.delegateModal didDismissModalControllerDelegate:self];
+    LiveAgentApi.hasEnded = true;
+}
 
 @end
