@@ -22,6 +22,9 @@
 + (NSString *) sessionSequence;
 + (void) setSessionSequence:(NSString *)sequence;
 
++ (NSString *) agentId;
++ (void) setAgentId:(NSString *)agent;
+
 + (BOOL *) hasEnded;
 + (void) setHasEnded:(BOOL*)ended;
 

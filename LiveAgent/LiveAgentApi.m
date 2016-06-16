@@ -11,11 +11,12 @@
 
 @implementation LiveAgentApi
 
-static NSString *sessionId = @"";
-static NSString *sessionKey = @"";
+static NSString *sessionId            = @"";
+static NSString *sessionKey           = @"";
 static NSString *sessionAffinityToken = @"null";
-static NSString *sessionSequence = @"null";
-static BOOL     *hasEnded = false;
+static NSString *sessionSequence      = @"null";
+static NSString *agentId              = @"agent";
+static BOOL     *hasEnded             = false;
 static NSMutableArray* messages;
 
 + (NSString *) sessionId { return sessionId; }
@@ -30,12 +31,14 @@ static NSMutableArray* messages;
 + (NSString *) sessionSequence { return sessionSequence; }
 + (void) setSessionSequence:(NSString*)sequence { sessionSequence = sequence; }
 
++ (NSString *) agentId { return agentId; }
++ (void) setAgentId:(NSString*)agent { agentId = agent; }
+
 + (BOOL *) hasEnded { return hasEnded; }
 + (void) setHasEnded:(BOOL*)ended { hasEnded = ended; }
 
 + (NSMutableArray*) messages { return messages; }
 + (void) setMessages:(NSMutableArray*)chatMessages { messages = chatMessages; }
-
 
 
 + (NSDictionary *)getHeaders {
@@ -45,8 +48,5 @@ static NSMutableArray* messages;
               X_LIVEAGENT_API_VERSION : API_V
               };
 }
-
-
-
 
 @end

@@ -13,7 +13,6 @@
 #import "Constants.h"
 #import "AFNetworking/AFNetworking.h"
 #import <CCActivityHUD/CCActivityHUD.h>
-#import "localNotification.h"
 
 @interface ChatViewController ()
 
@@ -134,6 +133,7 @@
     {
         UILocalNotification *notification = [[UILocalNotification alloc] init];
         notification.fireDate = [NSDate date];
+        notification.alertTitle = @"Mew message!";
         notification.alertBody = chatMessage;
         notification.timeZone = [NSTimeZone defaultTimeZone];
         notification.soundName = UILocalNotificationDefaultSoundName;
