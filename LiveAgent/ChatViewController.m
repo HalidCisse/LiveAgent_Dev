@@ -13,6 +13,7 @@
 #import "Constants.h"
 #import "AFNetworking/AFNetworking.h"
 #import <CCActivityHUD/CCActivityHUD.h>
+#import "localNotification.h"
 
 @interface ChatViewController ()
 
@@ -126,6 +127,19 @@
         [self finishSendingMessage];
     }else{
         [self finishReceivingMessage];
+    }
+    
+    UIApplicationState state = [[UIApplication sharedApplication] applicationState];
+    if (state == UIApplicationStateBackground || state == UIApplicationStateInactive)
+    {
+        UILocalNotification *notification = [[UILocalNotification alloc] init];
+        notification.fireDate = [NSDate date];
+        notification.alertBody = chatMessage;
+        notification.timeZone = [NSTimeZone defaultTimeZone];
+        notification.soundName = UILocalNotificationDefaultSoundName;
+        notification.applicationIconBadgeNumber = 1;
+        
+        [[UIApplication sharedApplication] scheduleLocalNotification:notification];
     }
 }
 

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1F1693B31D12F31D0007DD4D /* LocalNotification.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F1693B21D12F31D0007DD4D /* LocalNotification.m */; };
 		1F30887E1D0ECFE4002AFB05 /* Trash.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F30887D1D0ECFE4002AFB05 /* Trash.m */; };
 		1F3088811D0F0895002AFB05 /* ChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F3088801D0F0895002AFB05 /* ChatViewController.m */; };
 		1F3088841D0F0F91002AFB05 /* LiveAgentApi.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F3088831D0F0F91002AFB05 /* LiveAgentApi.m */; };
@@ -22,6 +23,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1F1693B11D12F31D0007DD4D /* LocalNotification.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalNotification.h; sourceTree = "<group>"; };
+		1F1693B21D12F31D0007DD4D /* LocalNotification.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocalNotification.m; sourceTree = "<group>"; };
 		1F30887C1D0ECFE4002AFB05 /* Trash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Trash.h; sourceTree = "<group>"; };
 		1F30887D1D0ECFE4002AFB05 /* Trash.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Trash.m; sourceTree = "<group>"; };
 		1F30887F1D0F0895002AFB05 /* ChatViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatViewController.h; sourceTree = "<group>"; };
@@ -99,6 +102,8 @@
 				1F3088831D0F0F91002AFB05 /* LiveAgentApi.m */,
 				1F3B68591D1194B9004734C8 /* ChatRequestController.h */,
 				1F3B685A1D1194B9004734C8 /* ChatRequestController.m */,
+				1F1693B11D12F31D0007DD4D /* LocalNotification.h */,
+				1F1693B21D12F31D0007DD4D /* LocalNotification.m */,
 			);
 			path = LiveAgent;
 			sourceTree = "<group>";
@@ -162,6 +167,12 @@
 				TargetAttributes = {
 					1FC571301D09ABFC0001923B = {
 						CreatedOnToolsVersion = 7.3.1;
+						DevelopmentTeam = 2657X7TUJK;
+						SystemCapabilities = {
+							com.apple.Push = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
@@ -250,6 +261,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1F3088841D0F0F91002AFB05 /* LiveAgentApi.m in Sources */,
+				1F1693B31D12F31D0007DD4D /* LocalNotification.m in Sources */,
 				1FC5713C1D09ABFC0001923B /* ViewController.m in Sources */,
 				1FC571391D09ABFC0001923B /* AppDelegate.m in Sources */,
 				1F3088811D0F0895002AFB05 /* ChatViewController.m in Sources */,
