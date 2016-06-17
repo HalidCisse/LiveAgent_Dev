@@ -7,6 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "JSQMessages.h"
+
 
 @interface LiveAgentApi : NSObject
 
@@ -25,6 +27,12 @@
 + (NSString *) agentId;
 + (void) setAgentId:(NSString *)agent;
 
++ (NSString *) agentName;
++ (void) setAgentName:(NSString *)name;
+
++ (NSString *) clientName;
++ (void) setClientName:(NSString *)name;
+
 + (BOOL *) hasEnded;
 + (void) setHasEnded:(BOOL*)ended;
 
@@ -32,5 +40,6 @@
 + (void) setMessages:(NSMutableArray*)chatMessages;
 
 + (NSDictionary *)getHeaders;
++ (NSString *) agentInitial;
 
 @end

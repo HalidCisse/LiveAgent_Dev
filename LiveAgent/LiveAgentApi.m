@@ -6,6 +6,7 @@
 //  Copyright © 2016 Halid Cisse. All rights reserved.
 //
 
+#import "JSQMessages.h"
 #import "LiveAgentApi.h"
 #import "Constants.h"
 
@@ -15,7 +16,9 @@ static NSString *sessionId            = @"";
 static NSString *sessionKey           = @"";
 static NSString *sessionAffinityToken = @"null";
 static NSString *sessionSequence      = @"null";
-static NSString *agentId              = @"agent";
+static NSString *agentId              = @"";
+static NSString *agentName            = @"agent";
+static NSString *clientName           = @"Customer";
 static BOOL     *hasEnded             = false;
 static NSMutableArray* messages;
 
@@ -34,6 +37,12 @@ static NSMutableArray* messages;
 + (NSString *) agentId { return agentId; }
 + (void) setAgentId:(NSString*)agent { agentId = agent; }
 
++ (NSString *) agentName { return agentName; }
++ (void) setAgentName:(NSString*)name { agentName = name; }
+
++ (NSString *) clientName { return clientName; }
++ (void) setClientName:(NSString*)name { clientName = name; }
+
 + (BOOL *) hasEnded { return hasEnded; }
 + (void) setHasEnded:(BOOL*)ended { hasEnded = ended; }
 
@@ -49,4 +58,15 @@ static NSMutableArray* messages;
               };
 }
 
++ (NSString *) agentInitial {
+    NSMutableString * firstCharacters = [NSMutableString string];
+    NSArray * words = [agentName componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+    for (NSString * word in words) {
+        if ([word length] > 0) {
+            NSString * firstLetter = [word substringToIndex:1];
+            [firstCharacters appendString:[firstLetter uppercaseString]];
+        }
+    }
+    return firstCharacters;
+}
 @end

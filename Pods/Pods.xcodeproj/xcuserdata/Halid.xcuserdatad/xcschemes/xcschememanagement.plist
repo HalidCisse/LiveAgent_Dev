@@ -24,11 +24,6 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>JSQSystemSoundPlayer.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
 		<key>Pods-LiveAgent.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -42,27 +37,22 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>1ED4DFAAD25E1999D0244868457A351E</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
 		<key>318EE9B92AB78BD3939E21D31C870F5C</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>59CDDB315DD2B098E0CD9ED56B026F4B</key>
+		<key>32F2CB42F6E69125B3D7734ED2386CC2</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>93A9B3596EA1FE9F2A3D7F1805F59C16</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
 		<key>A6E0B4CA899E045FA7E7C338998D6B47</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>BE2BAFA1E57A63F24C8D7CE58B925B4C</key>
 		<dict>
 			<key>primary</key>
 			<true/>

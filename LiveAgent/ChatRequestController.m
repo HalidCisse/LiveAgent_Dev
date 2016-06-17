@@ -76,6 +76,8 @@
                    LiveAgentApi.sessionKey = [dictionary objectForKey:@"key"];
                    LiveAgentApi.sessionAffinityToken= [dictionary objectForKey:@"affinityToken"];
                    
+                   //LiveAgentApi.sessionSequence = [NSString stringWithFormat:@"%d", 2];
+                   
                    LiveAgentApi.sessionSequence = [NSString stringWithFormat:@"%d", LiveAgentApi.sessionSequence.intValue + 1];
                    [self requestChat];
                }else {
@@ -87,29 +89,40 @@
 
 - (void) requestChat {
     
-    NSDictionary *parameters = @{    Param_SessionId          :LiveAgentApi.sessionId,
-                                     Param_OrganizationId     :ORG_ID,
-                                     Param_DeploymentId       :DEPLOYEMENT_ID,
-                                     Param_ButtonId           :BUTTON_ID,
-                                     Param_UserAgent          :USER_AGENT,
-                                     Param_Language           :LANG,
-                                     Param_ScreenResolution   :SCREEN_RES,
-                                     Param_VisitorName        :@"Customer",
-                                     Param_PrechatDetails     :@[],
-                                     Param_PrechatEntities    :@[],
-                                     Param_ReceiveQueueUpdates:@YES,
-                                     Param_IsPost             :@YES
-                                     };
+    NSDictionary *parameters;
     
-    NSError *error;
-    NSData *data = [NSJSONSerialization dataWithJSONObject:parameters
-                                                   options:NSJSONWritingPrettyPrinted
-                                                     error:&error];
-    NSString *jsonData = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-    
-    NSLog(@"POST Json : %@", parameters);
-    NSLog(@"POST Json : %@", jsonData);
-    
+    if (LiveAgentApi.agentId.length > 0)
+    {
+        parameters = @{    Param_SessionId          :LiveAgentApi.sessionId,
+                           Param_OrganizationId     :ORG_ID,
+                           Param_DeploymentId       :DEPLOYEMENT_ID,
+                           Param_ButtonId           :BUTTON_ID,
+                           Param_AgentId            :LiveAgentApi.agentId,
+                           Param_UserAgent          :USER_AGENT,
+                           Param_Language           :LANG,
+                           Param_ScreenResolution   :SCREEN_RES,
+                           Param_VisitorName        :LiveAgentApi.clientName,
+                           Param_PrechatDetails     :@[],
+                           Param_PrechatEntities    :@[],
+                           Param_ReceiveQueueUpdates:@YES,
+                           Param_IsPost             :@YES
+                     };
+    }else {
+        parameters = @{    Param_SessionId          :LiveAgentApi.sessionId,
+                           Param_OrganizationId     :ORG_ID,
+                           Param_DeploymentId       :DEPLOYEMENT_ID,
+                           Param_ButtonId           :BUTTON_ID,
+                           Param_UserAgent          :USER_AGENT,
+                           Param_Language           :LANG,
+                           Param_ScreenResolution   :SCREEN_RES,
+                           Param_VisitorName        :LiveAgentApi.clientName,
+                           Param_PrechatDetails     :@[],
+                           Param_PrechatEntities    :@[],
+                           Param_ReceiveQueueUpdates:@YES,
+                           Param_IsPost             :@YES
+                     };
+    }
+        
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
     
     AFJSONRequestSerializer *serializer = [AFJSONRequestSerializer serializer];
@@ -121,7 +134,6 @@
     
     manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"text/plain",nil];
     manager.responseSerializer = [AFJSONResponseSerializer serializer];
-    //    manager.responseSerializer = [AFJSONResponseSerializer serializerWithReadingOptions:NSJSONReadingAllowFragments];
     
     [manager.requestSerializer setValue:LiveAgentApi.sessionKey forHTTPHeaderField:X_LIVEAGENT_SESSION_KEY];
     [manager.requestSerializer setValue:@"null" forHTTPHeaderField:X_LIVEAGENT_AFFINITY];
@@ -138,6 +150,12 @@
                   LiveAgentApi.hasEnded = false;
                   [self checkAvailability];
               } else {
+                  [self.activityHUD showWithText:@"failed to connect" shimmering:YES];
+                  [self.activityHUD dismissWithText:@"failed to connect" delay:3 success:NO];
+                  
+                  LiveAgentApi.agentName =@"";
+                  LiveAgentApi.agentId   =@"";
+                  
                   NSString* errResponse = [[NSString alloc] initWithData:(NSData *)error.userInfo[AFNetworkingOperationFailingURLResponseDataErrorKey] encoding:NSUTF8StringEncoding];
                   
                   NSLog(@"Error: %@", error);
@@ -178,6 +196,10 @@
                    if ([[lastMessage objectForKey:@"type"]  isEqual: @"ChatEstablished"]) {
                        [self.activityHUD dismiss];
                        _statusResolved = true;
+                       
+                       NSDictionary *message  =[lastMessage objectForKey:@"message"];
+                       LiveAgentApi.agentName =[message objectForKey:@"name"];
+                       LiveAgentApi.agentId   =[message objectForKey:@"userId"];
                        
                        [self performSegueWithIdentifier:@"ChatViewController" sender:self];
                    }

@@ -232,11 +232,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "LiveAgent/ChatViewController.m"
-            timestampString = "487781427.384463"
+            timestampString = "487865877.827502"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "82"
-            endingLineNumber = "82"
+            startingLineNumber = "138"
+            endingLineNumber = "138"
             landmarkName = "-didPressSendButton:withMessageText:senderId:senderDisplayName:date:"
             landmarkType = "5">
          </BreakpointContent>
@@ -248,11 +248,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "LiveAgent/ChatViewController.m"
-            timestampString = "487781427.384463"
+            timestampString = "487865877.827502"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "97"
-            endingLineNumber = "97"
+            startingLineNumber = "147"
+            endingLineNumber = "147"
             landmarkName = "-collectionView:messageBubbleImageDataForItemAtIndexPath:"
             landmarkType = "5">
          </BreakpointContent>
@@ -264,11 +264,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "LiveAgent/ChatViewController.m"
-            timestampString = "487783370.994419"
+            timestampString = "487865877.827502"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "183"
-            endingLineNumber = "183"
+            startingLineNumber = "229"
+            endingLineNumber = "229"
             landmarkName = "-pullMessages"
             landmarkType = "5">
          </BreakpointContent>
@@ -280,11 +280,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "LiveAgent/ChatViewController.m"
-            timestampString = "487783370.994419"
+            timestampString = "487865877.827502"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "164"
-            endingLineNumber = "164"
+            startingLineNumber = "212"
+            endingLineNumber = "212"
             landmarkName = "-pullMessages"
             landmarkType = "5">
          </BreakpointContent>
@@ -296,7 +296,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "LiveAgent/ChatRequestController.m"
-            timestampString = "487776769.633102"
+            timestampString = "487865877.827502"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "36"
@@ -312,11 +312,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "LiveAgent/ChatRequestController.m"
-            timestampString = "487776769.633102"
+            timestampString = "487865877.827502"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "172"
-            endingLineNumber = "172"
+            startingLineNumber = "190"
+            endingLineNumber = "190"
             landmarkName = "-updateStatus"
             landmarkType = "5">
          </BreakpointContent>
@@ -328,12 +328,28 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "LiveAgent/ChatViewController.m"
-            timestampString = "487783370.994419"
+            timestampString = "487865877.827502"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "218"
-            endingLineNumber = "218"
+            startingLineNumber = "252"
+            endingLineNumber = "252"
             landmarkName = "-pullMessages"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "LiveAgent/ChatRequestController.m"
+            timestampString = "487865877.827502"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "197"
+            endingLineNumber = "197"
+            landmarkName = "-updateStatus"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

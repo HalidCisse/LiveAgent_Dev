@@ -19,6 +19,7 @@ extern NSString *const Param_SessionId;
 extern NSString *const Param_OrganizationId;
 extern NSString *const Param_DeploymentId;
 extern NSString *const Param_ButtonId;
+extern NSString *const Param_AgentId;
 extern NSString *const Param_UserAgent;
 extern NSString *const Param_Language;
 extern NSString *const Param_ScreenResolution;

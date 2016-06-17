@@ -13,9 +13,11 @@
 #import "Constants.h"
 #import "AFNetworking/AFNetworking.h"
 #import <CCActivityHUD/CCActivityHUD.h>
+#import "LiveAgentApi.h"
 
 @interface ChatViewController ()
 
+  @property NSDictionary *avatars;
   @property JSQMessagesBubbleImage *outgoingBubbleImageView;
   @property JSQMessagesBubbleImage *incomingBubbleImageView;
   @property CCActivityHUD *activityHUD;
@@ -26,6 +28,10 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    //self.navigationController.navigationBar.barStyle = UIStatusBarStyleBlackTranslucent;
+    //[self.navigationController.navigationBar setBarTintColor:UIColorFromRGB(0x313B47)];
+    //self.navigationController.navigationBar.translucent = true;
     
     [self setUp];
     [self pullMessages];
@@ -39,13 +45,10 @@
 
 - (void) setUp {
     self.title             = @"Support client";
-    self.senderId          = @"customer";
-    self.senderDisplayName = @"Me";
-    
     [self setupBubbles];
     
-    self.collectionView.collectionViewLayout.incomingAvatarViewSize = CGSizeZero;
-    self.collectionView.collectionViewLayout.outgoingAvatarViewSize = CGSizeZero;
+    //self.collectionView.collectionViewLayout.incomingAvatarViewSize = CGSizeZero;
+    //self.collectionView.collectionViewLayout.outgoingAvatarViewSize = CGSizeZero;
     
     self.inputToolbar.contentView.leftBarButtonItem = nil;
     _activityHUD = [CCActivityHUD new];
@@ -55,15 +58,68 @@
                                                                                           action:@selector(closePressed:)];
 }
 
-- (void) deactivateChat {
+- (void) setupBubbles {
+    _avatars = [NSDictionary new];
+    
+    JSQMessagesAvatarImageFactory *avatarFactory = [[JSQMessagesAvatarImageFactory alloc] initWithDiameter:kJSQMessagesCollectionViewAvatarSizeDefault];
+    
+    JSQMessagesAvatarImage *meImage = [avatarFactory avatarImageWithUserInitials:@"Me"
+                                                                 backgroundColor:[UIColor colorWithWhite:0.85f alpha:1.0f]
+                                                                       textColor:[UIColor colorWithWhite:0.60f alpha:1.0f]
+                                                                            font:[UIFont systemFontOfSize:14.0f]];
+    
+    JSQMessagesAvatarImage *agentImage = [avatarFactory avatarImageWithImage:[UIImage imageNamed:@"MySchneider"]];
+    
+    _avatars = @{
+                 @"customer": meImage,
+                 @"Agent"   : agentImage
+                };
+    
+    JSQMessagesBubbleImageFactory *bubbleFactory = [JSQMessagesBubbleImageFactory new];
+    _outgoingBubbleImageView = [bubbleFactory outgoingMessagesBubbleImageWithColor:[UIColor jsq_messageBubbleLightGrayColor]];
+    _incomingBubbleImageView = [bubbleFactory incomingMessagesBubbleImageWithColor:[UIColor jsq_messageBubbleGreenColor]];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    self.collectionView.collectionViewLayout.springinessEnabled = true;
+}
+
+- (NSString *)senderId {
+    return @"customer";
+}
+
+- (NSString *)senderDisplayName {
+    return @"Me";
+}
+
+- (void) deactivateChat : (NSString*) reason{
     self.inputToolbar.contentView.rightBarButtonItem = nil;
-    _activityHUD = [CCActivityHUD new];
-    self.inputToolbar.contentView.textView.text = @"#chat closed";
+    self.inputToolbar.contentView.textView.text = reason;
     self.inputToolbar.contentView.textView.editable = false;
     LiveAgentApi.hasEnded = true;
     
-    [self.activityHUD showWithText:@"chat ended by the agent." shimmering:false];
-    [self.activityHUD dismissWithText:@"chat ended by the agent." delay:0.5 success:YES];
+    [self.activityHUD showWithText:reason shimmering:false];
+    [self.activityHUD dismissWithText:reason delay:0.5 success:YES];
+}
+
+- (void) pauseChat {
+    self.inputToolbar.contentView.textView.editable = false;
+    self.inputToolbar.contentView.rightBarButtonItem.enabled = false;
+}
+
+- (void) unPauseChat {
+    if (!LiveAgentApi.hasEnded) {
+        self.inputToolbar.contentView.textView.editable = true;
+        self.inputToolbar.contentView.rightBarButtonItem.enabled = true;
+    }
+}
+
+- (id<JSQMessageAvatarImageDataSource>)collectionView:(JSQMessagesCollectionView *)collectionView avatarImageDataForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    JSQMessage *message = [LiveAgentApi.messages objectAtIndex:indexPath.item];
+    
+    return [self.avatars objectForKey:message.senderId];
 }
 
 - (id<JSQMessageData>)collectionView:(JSQMessagesCollectionView *)collectionView messageDataForItemAtIndexPath:(NSIndexPath *)indexPath{
@@ -77,32 +133,22 @@
 
 - (void)didPressSendButton:(UIButton *)button withMessageText:(NSString *)text senderId:(NSString *)senderId senderDisplayName:(NSString *)senderDisplayName date:(NSDate *)date{
     
-    
+    [self pauseChat];
     [self pushMessage:text sender:senderId];
 }
 
 - (void)didPressAccessoryButton:(UIButton *)sender{
 }
 
-- (void) setupBubbles {
-    JSQMessagesBubbleImageFactory *factory = [[JSQMessagesBubbleImageFactory alloc] init];
-    _outgoingBubbleImageView = [factory outgoingMessagesBubbleImageWithColor:UIColor.jsq_messageBubbleBlueColor];
-    
-    _incomingBubbleImageView = [factory incomingMessagesBubbleImageWithColor:UIColor.jsq_messageBubbleLightGrayColor];
-}
 
 - (id<JSQMessageBubbleImageDataSource>)collectionView:(JSQMessagesCollectionView *)collectionView messageBubbleImageDataForItemAtIndexPath:(NSIndexPath *)indexPath{
     
     JSQMessage *message = LiveAgentApi.messages[indexPath.item];
     if (message.senderId == self.senderId) {
-        return _outgoingBubbleImageView;
+        return self.outgoingBubbleImageView;
     } else {
-        return _incomingBubbleImageView;
+        return self.incomingBubbleImageView;
     }
-}
-
-- (id<JSQMessageAvatarImageDataSource>)collectionView:(JSQMessagesCollectionView *)collectionView avatarImageDataForItemAtIndexPath:(NSIndexPath *)indexPath {
-    return nil;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
@@ -111,9 +157,9 @@
     JSQMessage *message = LiveAgentApi.messages[indexPath.item];
     
     if (message.senderId == self.senderId) {
-        cell.textView.textColor = UIColor.whiteColor;
-    } else {
         cell.textView.textColor = UIColor.blackColor;
+    } else {
+        cell.textView.textColor = UIColor.whiteColor;
     }
     return cell;
 }
@@ -123,10 +169,12 @@
     [LiveAgentApi.messages addObject:message];
     
     if (senderId == self.senderId) {
-        [self finishSendingMessage];
+        [self finishSendingMessageAnimated:true];
     }else{
-        [self finishReceivingMessage];
+        [self finishReceivingMessageAnimated:true];
     }
+    
+    [self scrollToBottomAnimated:YES];
     
     UIApplicationState state = [[UIApplication sharedApplication] applicationState];
     if (state == UIApplicationStateBackground || state == UIApplicationStateInactive)
@@ -180,21 +228,9 @@
                    NSArray* messages = [dictionary objectForKey:@"messages"];
                    NSDictionary *lastMessage = messages.firstObject;
                    
-                   NSLog(@"%@", [lastMessage objectForKey:@"type"]);
-                   
-                   if ([[lastMessage objectForKey:@"type"]  isEqual: @"ChatRequestSuccess"]) {
-                       [self pullMessages];
-                       return;
-                   }
-                   
-                   if ([[lastMessage objectForKey:@"type"]  isEqual: @"ChatEstablished"]) {
-                       [self pullMessages];
-                       return;
-                   }
-                   
                    if ([[lastMessage objectForKey:@"type"]  isEqual: @"ChatRequestFail"]) {
                        
-                       //failed do something
+                       [self deactivateChat:@"chat request failed."];
                        return;
                    }
                    
@@ -206,23 +242,24 @@
                    }
                    
                    if ([[lastMessage objectForKey:@"type"]  isEqual: @"AgentTyping"]) {
-                       NSLog(@"Chat AgentTyping");
+                       self.showTypingIndicator = true;
                    }
                    
                    if ([[lastMessage objectForKey:@"type"]  isEqual: @"AgentNotTyping"]) {
-                       NSLog(@"Chat AgentNotTyping");
+                       self.showTypingIndicator = false;
                    }
                    
                    if ([[lastMessage objectForKey:@"type"]  isEqual: @"ChatEnded"]) {
-                       NSLog(@"Chat end by agent");
-                       
-                       [self deactivateChat];
+                       [self deactivateChat:@"chat ended by the agent."];
                    }
                    
                    [self pullMessages];
-               }else if (json.httpResponse.statusCode == 503 && !LiveAgentApi.hasEnded){
+               }else if (json.httpResponse.statusCode == 503){
                    [self ResyncSession];
                } else {
+                   [self.activityHUD show];
+                   [self.activityHUD dismissWithText:@"#can not connect." delay:3 success:NO];
+                   [self deactivateChat:@"#can not connect."];
                    [self pullMessages];
                }
            } progressBlock:^(FSNConnection *c) {}];
@@ -255,9 +292,6 @@
 }
 
 - (void) pushMessage:(NSString *)chatMessage sender:(NSString *) senderId {
-    
-    [self addMessageToUI:chatMessage senderId:senderId];
-    
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
     
     AFJSONRequestSerializer *serializer = [AFJSONRequestSerializer serializer];
@@ -278,12 +312,21 @@
     
     [manager POST:ChatMessage_path parameters:@{@"text":chatMessage} progress:nil
           success:^(NSURLSessionDataTask *task, id responseObject){
+              [self addMessageToUI:chatMessage senderId:senderId];
+              [self unPauseChat];
               LiveAgentApi.sessionSequence = [NSString stringWithFormat:@"%d", LiveAgentApi.sessionSequence.intValue + 1];
           } failure:^(NSURLSessionDataTask *task, NSError *error){
+              [self unPauseChat];
+              
               if (task.response.statusCode == 200 || task.response.statusCode == 204){
+                  [self addMessageToUI:chatMessage senderId:senderId];
                   LiveAgentApi.sessionSequence = [NSString stringWithFormat:@"%d", LiveAgentApi.sessionSequence.intValue + 1];
               } else if (task.response.statusCode == 503) {
                   [self ResyncSession];
+              } else if (task.response.statusCode == 0) {
+                  [self.activityHUD show];
+                  [self.activityHUD dismissWithText:@"#The Internet connection appears to be offline." delay:3 success:NO];
+                  [self deactivateChat:@"#The Internet connection appears to be offline."];
               } else {
                   NSString* errResponse = [[NSString alloc] initWithData:(NSData *)error.userInfo[AFNetworkingOperationFailingURLResponseDataErrorKey] encoding:NSUTF8StringEncoding];
                   

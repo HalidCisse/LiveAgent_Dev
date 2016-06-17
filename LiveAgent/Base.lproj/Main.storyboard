@@ -80,7 +80,7 @@
                                     <constraint firstAttribute="width" constant="110" id="F5C-ud-y5a"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="10"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                         </subviews>
@@ -113,7 +113,7 @@
                         <viewControllerLayoutGuide type="bottom" id="Tm1-Mp-38M"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="S7s-DR-sc2">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="556"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
@@ -163,7 +163,7 @@
         <!--Navigation Controller-->
         <scene sceneID="dqj-5P-mVT">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="0x6-c7-oZp" sceneMemberID="viewController">
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" toolbarHidden="NO" id="0x6-c7-oZp" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="etr-hh-7qK">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
