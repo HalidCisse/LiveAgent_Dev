@@ -140,7 +140,6 @@
 - (void)didPressAccessoryButton:(UIButton *)sender{
 }
 
-
 - (id<JSQMessageBubbleImageDataSource>)collectionView:(JSQMessagesCollectionView *)collectionView messageBubbleImageDataForItemAtIndexPath:(NSIndexPath *)indexPath{
     
     JSQMessage *message = LiveAgentApi.messages[indexPath.item];
@@ -166,7 +165,7 @@
 
 - (NSAttributedString *)collectionView:(JSQMessagesCollectionView *)collectionView attributedTextForCellTopLabelAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (indexPath.item % 3 == 0) {
+    if (indexPath.item % 7 == 0) {
         JSQMessage *message = [LiveAgentApi.messages objectAtIndex:indexPath.item];
         return [[JSQMessagesTimestampFormatter sharedFormatter] attributedTimestampForDate:message.date];
     }
@@ -207,7 +206,7 @@
 - (CGFloat)collectionView:(JSQMessagesCollectionView *)collectionView
                    layout:(JSQMessagesCollectionViewFlowLayout *)collectionViewLayout heightForCellTopLabelAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (indexPath.item % 3 == 0) {
+    if (indexPath.item % 7 == 0) {
         return kJSQMessagesCollectionViewCellLabelHeightDefault;
     }
     
