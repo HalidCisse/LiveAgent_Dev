@@ -72,7 +72,7 @@
     
     _avatars = @{
                  @"customer": meImage,
-                 @"Agent"   : agentImage
+                 @"agent"   : agentImage
                 };
     
     JSQMessagesBubbleImageFactory *bubbleFactory = [JSQMessagesBubbleImageFactory new];
@@ -164,17 +164,91 @@
     return cell;
 }
 
-- (void) addMessageToUI:(NSString*) chatMessage senderId:(NSString*) senderId  {
-    JSQMessage *message = [[JSQMessage alloc] initWithSenderId:senderId senderDisplayName:@"" date:[NSDate date] text:chatMessage];
+- (NSAttributedString *)collectionView:(JSQMessagesCollectionView *)collectionView attributedTextForCellTopLabelAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (indexPath.item % 3 == 0) {
+        JSQMessage *message = [LiveAgentApi.messages objectAtIndex:indexPath.item];
+        return [[JSQMessagesTimestampFormatter sharedFormatter] attributedTimestampForDate:message.date];
+    }
+    return nil;
+}
+
+- (NSAttributedString *)collectionView:(JSQMessagesCollectionView *)collectionView attributedTextForMessageBubbleTopLabelAtIndexPath:(NSIndexPath *)indexPath
+{
+    JSQMessage *message = [LiveAgentApi.messages objectAtIndex:indexPath.item];
+    
+    /**
+     *  iOS7-style sender name labels
+     */
+    if ([message.senderId isEqualToString:self.senderId]) {
+        return nil;
+    }
+    
+    if (indexPath.item - 1 > 0) {
+        JSQMessage *previousMessage = [LiveAgentApi.messages objectAtIndex:indexPath.item - 1];
+        if ([[previousMessage senderId] isEqualToString:message.senderId]) {
+            return nil;
+        }
+    }
+    
+    /**
+     *  Don't specify attributes to use the defaults.
+     */
+    return [[NSAttributedString alloc] initWithString:message.senderDisplayName];
+}
+
+- (NSAttributedString *)collectionView:(JSQMessagesCollectionView *)collectionView attributedTextForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
+{
+    return nil;
+}
+
+#pragma mark - Adjusting cell label heights
+
+- (CGFloat)collectionView:(JSQMessagesCollectionView *)collectionView
+                   layout:(JSQMessagesCollectionViewFlowLayout *)collectionViewLayout heightForCellTopLabelAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (indexPath.item % 3 == 0) {
+        return kJSQMessagesCollectionViewCellLabelHeightDefault;
+    }
+    
+    return 0.0f;
+}
+
+- (CGFloat)collectionView:(JSQMessagesCollectionView *)collectionView
+                   layout:(JSQMessagesCollectionViewFlowLayout *)collectionViewLayout heightForMessageBubbleTopLabelAtIndexPath:(NSIndexPath *)indexPath
+{
+    JSQMessage *currentMessage = [LiveAgentApi.messages objectAtIndex:indexPath.item];
+    if ([[currentMessage senderId] isEqualToString:self.senderId]) {
+        return 0.0f;
+    }
+    
+    if (indexPath.item - 1 > 0) {
+        JSQMessage *previousMessage = [LiveAgentApi.messages objectAtIndex:indexPath.item - 1];
+        if ([[previousMessage senderId] isEqualToString:[currentMessage senderId]]) {
+            return 0.0f;
+        }
+    }
+    
+    return kJSQMessagesCollectionViewCellLabelHeightDefault;
+}
+
+- (CGFloat)collectionView:(JSQMessagesCollectionView *)collectionView
+                   layout:(JSQMessagesCollectionViewFlowLayout *)collectionViewLayout heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
+{
+    return 0.0f;
+}
+
+- (void) addMessageToUI:(NSString*) chatMessage senderId:(NSString*) senderId senderName:(NSString*) senderName  {
+    JSQMessage *message = [[JSQMessage alloc] initWithSenderId:senderId senderDisplayName:senderName date:[NSDate date] text:chatMessage];
     [LiveAgentApi.messages addObject:message];
+    
+    [self scrollToBottomAnimated:YES];
     
     if (senderId == self.senderId) {
         [self finishSendingMessageAnimated:true];
     }else{
         [self finishReceivingMessageAnimated:true];
     }
-    
-    [self scrollToBottomAnimated:YES];
     
     UIApplicationState state = [[UIApplication sharedApplication] applicationState];
     if (state == UIApplicationStateBackground || state == UIApplicationStateInactive)
@@ -229,16 +303,14 @@
                    NSDictionary *lastMessage = messages.firstObject;
                    
                    if ([[lastMessage objectForKey:@"type"]  isEqual: @"ChatRequestFail"]) {
-                       
                        [self deactivateChat:@"chat request failed."];
                        return;
                    }
                    
                    if ([[lastMessage objectForKey:@"type"]  isEqual: @"ChatMessage"]) {
                        NSDictionary *ChatMessage = [lastMessage objectForKey:@"message"];
-                       NSString *chat = [ChatMessage objectForKey:@"text"];
-                       NSLog(@"New Chat message : %@" , chat);
-                      [self addMessageToUI:chat senderId:@"Agent"];
+                       
+                      [self addMessageToUI:[ChatMessage objectForKey:@"text"] senderId:@"agent"   senderName:[ChatMessage objectForKey:@"name"]];
                    }
                    
                    if ([[lastMessage objectForKey:@"type"]  isEqual: @"AgentTyping"]) {
@@ -256,36 +328,21 @@
                    [self pullMessages];
                }else if (json.httpResponse.statusCode == 503){
                    [self ResyncSession];
-               } else {
-                   [self.activityHUD show];
-                   [self.activityHUD dismissWithText:@"#can not connect." delay:3 success:NO];
-                   [self deactivateChat:@"#can not connect."];
+               } else if (json.response.statusCode == 204){
+                   [self pullMessages];
+               } else if (json.response.statusCode == 0){
+                   [self deactivateChat:@"The Internet connection appears to be offline."];
+                   [self pullMessages];
+               } else if (json.response.statusCode == 409){
+                   LiveAgentApi.sessionAffinityToken = @"1";
                    [self pullMessages];
                }
-           } progressBlock:^(FSNConnection *c) {}];
-    [connection start];
-}
-
-- (void) ResyncSession{
-    
-    FSNConnection *connection =
-    [FSNConnection withUrl:[[NSURL alloc] initWithString:ResyncSession_path]
-                    method:FSNRequestMethodGET
-                   headers:[LiveAgentApi getHeaders]
-                parameters:@{Param_SessionId : LiveAgentApi.sessionId}
-                parseBlock:^id(FSNConnection *c, NSError **error) {
-                    return [c.responseData dictionaryFromJSONWithError:error];
-                }
-           completionBlock:^(FSNConnection *json) {
-               if (json.didSucceed) {
-                   NSDictionary *dictionary = (NSDictionary *)json.parseResult;
+               else {
+                   NSLog(@"response code %ld", json.response.statusCode);
+                   NSLog(@"response code %@", json.response);
                    
-                   if ([dictionary objectForKey:@"isValid"]) {
-                       LiveAgentApi.sessionKey = [dictionary objectForKey:@"key"];
-                       LiveAgentApi.sessionAffinityToken = [dictionary objectForKey:@"affinityToken"];
-                       
-                       [self pullMessages];
-                   }
+                   [self deactivateChat:@"can not connect."];
+                   //[self pullMessages];
                }
            } progressBlock:^(FSNConnection *c) {}];
     [connection start];
@@ -312,14 +369,14 @@
     
     [manager POST:ChatMessage_path parameters:@{@"text":chatMessage} progress:nil
           success:^(NSURLSessionDataTask *task, id responseObject){
-              [self addMessageToUI:chatMessage senderId:senderId];
+              [self addMessageToUI:chatMessage senderId:senderId senderName:@"customer"];
               [self unPauseChat];
               LiveAgentApi.sessionSequence = [NSString stringWithFormat:@"%d", LiveAgentApi.sessionSequence.intValue + 1];
           } failure:^(NSURLSessionDataTask *task, NSError *error){
               [self unPauseChat];
               
               if (task.response.statusCode == 200 || task.response.statusCode == 204){
-                  [self addMessageToUI:chatMessage senderId:senderId];
+                  [self addMessageToUI:chatMessage senderId:senderId senderName:@"customer"];
                   LiveAgentApi.sessionSequence = [NSString stringWithFormat:@"%d", LiveAgentApi.sessionSequence.intValue + 1];
               } else if (task.response.statusCode == 503) {
                   [self ResyncSession];
@@ -327,6 +384,8 @@
                   [self.activityHUD show];
                   [self.activityHUD dismissWithText:@"#The Internet connection appears to be offline." delay:3 success:NO];
                   [self deactivateChat:@"#The Internet connection appears to be offline."];
+              } else if (task.response.statusCode == 409){
+                  LiveAgentApi.sessionSequence = @"2";
               } else {
                   NSString* errResponse = [[NSString alloc] initWithData:(NSData *)error.userInfo[AFNetworkingOperationFailingURLResponseDataErrorKey] encoding:NSUTF8StringEncoding];
                   
@@ -335,6 +394,31 @@
                   NSLog(@"response code %ld",task.response.statusCode);
               }
           }];
+}
+
+- (void) ResyncSession{
+    
+    FSNConnection *connection =
+    [FSNConnection withUrl:[[NSURL alloc] initWithString:ResyncSession_path]
+                    method:FSNRequestMethodGET
+                   headers:[LiveAgentApi getHeaders]
+                parameters:@{Param_SessionId : LiveAgentApi.sessionId}
+                parseBlock:^id(FSNConnection *c, NSError **error) {
+                    return [c.responseData dictionaryFromJSONWithError:error];
+                }
+           completionBlock:^(FSNConnection *json) {
+               if (json.didSucceed) {
+                   NSDictionary *dictionary = (NSDictionary *)json.parseResult;
+                   
+                   if ([dictionary objectForKey:@"isValid"]) {
+                       LiveAgentApi.sessionKey = [dictionary objectForKey:@"key"];
+                       LiveAgentApi.sessionAffinityToken = [dictionary objectForKey:@"affinityToken"];
+                       
+                       [self pullMessages];
+                   }
+               }
+           } progressBlock:^(FSNConnection *c) {}];
+    [connection start];
 }
 
 - (void)closePressed:(UIBarButtonItem *)sender

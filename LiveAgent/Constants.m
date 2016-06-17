@@ -35,7 +35,7 @@
 // NSString *const DEPLOYEMENT_ID = @"572A000000004bg";
 // NSString *const BUTTON_ID = @"573A000000004wL";
 
- NSString *const LIVE_AGENT_ENDPOINT = @"https://d.la1-c1-frf.salesforceliveagent.com/chat/rest/";
+ NSString *const LIVE_AGENT_ENDPOINT = @"https://d.la1-c1-frf.salesforceliveagent.com";
  NSString *const ORG_ID = @"00D58000000OwMB";
  NSString *const DEPLOYEMENT_ID = @"57258000000L1mj";
  NSString *const BUTTON_ID = @"57358000000L24F";

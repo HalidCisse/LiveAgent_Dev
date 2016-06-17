@@ -14,7 +14,7 @@
 
 static NSString *sessionId            = @"";
 static NSString *sessionKey           = @"";
-static NSString *sessionAffinityToken = @"null";
+static NSString *sessionAffinityToken = @"1";
 static NSString *sessionSequence      = @"null";
 static NSString *agentId              = @"";
 static NSString *agentName            = @"agent";

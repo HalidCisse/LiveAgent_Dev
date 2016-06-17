@@ -33,6 +33,7 @@
 }
 
 - (void)viewDidAppear:(BOOL)animated{
+    //LiveAgentApi.sessionSequence = @"1";
     LiveAgentApi.hasEnded = true;
     _statusResolved = false;
 }
@@ -76,9 +77,9 @@
                    LiveAgentApi.sessionKey = [dictionary objectForKey:@"key"];
                    LiveAgentApi.sessionAffinityToken= [dictionary objectForKey:@"affinityToken"];
                    
-                   //LiveAgentApi.sessionSequence = [NSString stringWithFormat:@"%d", 2];
+                   LiveAgentApi.sessionSequence = [NSString stringWithFormat:@"%d", 2];
                    
-                   LiveAgentApi.sessionSequence = [NSString stringWithFormat:@"%d", LiveAgentApi.sessionSequence.intValue + 1];
+                   //LiveAgentApi.sessionSequence = [NSString stringWithFormat:@"%d", LiveAgentApi.sessionSequence.intValue + 1];
                    [self requestChat];
                }else {
                    _requestStatus.text = @"can not connect to server.";
