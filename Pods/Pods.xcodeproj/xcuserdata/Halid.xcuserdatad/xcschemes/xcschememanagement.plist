@@ -14,11 +14,6 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>FSNetworking.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
 		<key>JSQMessagesViewController.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -47,12 +42,7 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>93A9B3596EA1FE9F2A3D7F1805F59C16</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>A6E0B4CA899E045FA7E7C338998D6B47</key>
+		<key>E2A3E32B3683611334232AAFBFD5459F</key>
 		<dict>
 			<key>primary</key>
 			<true/>

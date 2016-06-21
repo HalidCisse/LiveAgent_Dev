@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "JSQMessages.h"
+#import "AFNetworking.h"
 
 
 @interface LiveAgentApi : NSObject
@@ -40,6 +41,7 @@
 + (void) setMessages:(NSMutableArray*)chatMessages;
 
 + (NSDictionary *)getHeaders;
++ (void)fillHeaders:(AFHTTPSessionManager*) manager;
 + (NSString *) agentInitial;
 
 @end

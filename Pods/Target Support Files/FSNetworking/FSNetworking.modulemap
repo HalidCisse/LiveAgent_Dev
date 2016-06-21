@@ -1,6 +1,0 @@
-framework module FSNetworking {
-  umbrella header "FSNetworking-umbrella.h"
-
-  export *
-  module * { export * }
-}

@@ -1,60 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="Yey-sF-31M">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="726-Uz-qBA">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
-        <scene sceneID="tne-QT-ifu">
-            <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
-                        <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BYX-ob-YUp">
-                                <rect key="frame" x="266" y="285" width="68" height="30"/>
-                                <state key="normal" title="Start chat"/>
-                                <connections>
-                                    <action selector="startChat:" destination="BYZ-38-t0r" eventType="touchUpInside" id="HbJ-fZ-9Ua"/>
-                                </connections>
-                            </button>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Wet-DN-gig">
-                                <rect key="frame" x="207" y="323" width="187" height="30"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits"/>
-                            </textField>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4GA-6M-iPe">
-                                <rect key="frame" x="282" y="361" width="36" height="30"/>
-                                <state key="normal" title="Send"/>
-                                <connections>
-                                    <action selector="chatSend:" destination="BYZ-38-t0r" eventType="touchUpInside" id="S2J-IG-T8L"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RbZ-VM-urm">
-                                <rect key="frame" x="247" y="445" width="107" height="30"/>
-                                <state key="normal" title="Go to chat view"/>
-                                <connections>
-                                    <action selector="showChatView:" destination="BYZ-38-t0r" eventType="touchUpInside" id="7Ba-Qy-zin"/>
-                                </connections>
-                            </button>
-                        </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                    </view>
-                    <navigationItem key="navigationItem" id="Gdn-gg-xbS"/>
-                    <connections>
-                        <outlet property="chatBox" destination="Wet-DN-gig" id="OrF-nj-rTi"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="3026" y="297"/>
-        </scene>
         <!--Chat Request Controller-->
         <scene sceneID="JVc-C6-9vh">
             <objects>
@@ -102,7 +52,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="LyW-ug-DeH" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3026" y="1027"/>
+            <point key="canvasLocation" x="2911" y="1027"/>
         </scene>
         <!--Chat View Controller-->
         <scene sceneID="Abt-21-Rwz">
@@ -121,44 +71,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="puw-XI-H2T" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4647" y="1027"/>
-        </scene>
-        <!--Item-->
-        <scene sceneID="MK4-Vj-J15">
-            <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="oPl-Wg-obi" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Item" id="Mne-Y8-uMI"/>
-                    <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="HL9-7t-gbX">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <nil name="viewControllers"/>
-                    <connections>
-                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="rootViewController" id="gPq-jE-WQ2"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="Uu5-XQ-B1n" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="2214" y="297"/>
-        </scene>
-        <!--Navigation Controller-->
-        <scene sceneID="OVu-yE-skh">
-            <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Yey-sF-31M" sceneMemberID="viewController">
-                    <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="gj7-Cc-vks">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <nil name="viewControllers"/>
-                    <connections>
-                        <segue destination="726-Uz-qBA" kind="relationship" relationship="rootViewController" id="zbh-1k-pUW"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="pcA-dy-8ih" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="2214" y="1027"/>
+            <point key="canvasLocation" x="4314" y="1027"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="dqj-5P-mVT">
@@ -176,7 +89,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="A9y-fi-7U9" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3835" y="1027"/>
+            <point key="canvasLocation" x="3609" y="1027"/>
         </scene>
     </scenes>
 </document>

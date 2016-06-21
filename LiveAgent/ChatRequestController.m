@@ -9,11 +9,10 @@
 #import "ChatRequestController.h"
 #import "JSQMessages.h"
 #import "LiveAgentApi.h"
-#import <FSNetworking/FSNConnection.h>
 #import "Constants.h"
-#import "AFNetworking/AFNetworking.h"
 #import <CCActivityHUD/CCActivityHUD.h>
 #import "ChatViewController.h"
+#import "AFNetworking.h"
 
 @interface ChatRequestController ()
 
@@ -55,43 +54,33 @@
 
 - (void) requestSession {
     
-    NSDictionary* headers    = @{ X_LIVEAGENT_SESSION_KEY : @"",
-                                  X_LIVEAGENT_AFFINITY    : @"null",
-                                  X_LIVEAGENT_SEQUENCE    : @"null" ,
-                                  X_LIVEAGENT_API_VERSION : API_V
-                                 };
+    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
     
-    FSNConnection *connection =
-    [FSNConnection withUrl:[[NSURL alloc] initWithString:SessionId_path]
-                    method:FSNRequestMethodGET
-                   headers:headers
-                parameters:nil
-                parseBlock:^id(FSNConnection *c, NSError **error) {
-                    return [c.responseData dictionaryFromJSONWithError:error];
-                }
-           completionBlock:^(FSNConnection *json) {
-               if (json.didSucceed) {
-                   NSDictionary *dictionary = (NSDictionary *)json.parseResult;
-                   
-                   LiveAgentApi.sessionId = [dictionary objectForKey:@"id"];
-                   LiveAgentApi.sessionKey = [dictionary objectForKey:@"key"];
-                   LiveAgentApi.sessionAffinityToken= [dictionary objectForKey:@"affinityToken"];
-                   
-                   LiveAgentApi.sessionSequence = [NSString stringWithFormat:@"%d", 2];
-                   
-                   //LiveAgentApi.sessionSequence = [NSString stringWithFormat:@"%d", LiveAgentApi.sessionSequence.intValue + 1];
-                   [self requestChat];
-               }else {
-                   _requestStatus.text = @"can not connect to server.";
-               }
-           } progressBlock:^(FSNConnection *c) {}];
-    [connection start];
+    [manager.requestSerializer setValue:@""     forHTTPHeaderField:X_LIVEAGENT_SESSION_KEY];
+    [manager.requestSerializer setValue:@"null" forHTTPHeaderField:X_LIVEAGENT_AFFINITY];
+    [manager.requestSerializer setValue:@"null" forHTTPHeaderField:X_LIVEAGENT_SEQUENCE];
+    [manager.requestSerializer setValue:API_V   forHTTPHeaderField:X_LIVEAGENT_API_VERSION];
+    
+    [manager GET:SessionId_path parameters:nil progress:nil success:^(NSURLSessionTask *task, id responseObject) {
+        NSLog(@"JSON: %@", responseObject);
+        
+        NSDictionary *dictionary = (NSDictionary *)responseObject;
+        
+        LiveAgentApi.sessionId   = [dictionary objectForKey:@"id"];
+        LiveAgentApi.sessionKey  = [dictionary objectForKey:@"key"];
+        LiveAgentApi.sessionAffinityToken = [dictionary objectForKey:@"affinityToken"];
+        LiveAgentApi.sessionSequence      = [NSString stringWithFormat:@"%d", 2];
+        
+        [self requestChat];
+    } failure:^(NSURLSessionTask *operation, NSError *error) {
+        NSLog(@"Error: %@", error);
+    }];
 }
 
 - (void) requestChat {
-    
+
     NSDictionary *parameters;
-    
+
     if (LiveAgentApi.agentId.length > 0)
     {
         parameters = @{    Param_SessionId          :LiveAgentApi.sessionId,
@@ -107,7 +96,7 @@
                            Param_PrechatEntities    :@[],
                            Param_ReceiveQueueUpdates:@YES,
                            Param_IsPost             :@YES
-                     };
+                           };
     }else {
         parameters = @{    Param_SessionId          :LiveAgentApi.sessionId,
                            Param_OrganizationId     :ORG_ID,
@@ -121,49 +110,52 @@
                            Param_PrechatEntities    :@[],
                            Param_ReceiveQueueUpdates:@YES,
                            Param_IsPost             :@YES
-                     };
+                           };
     }
-        
+
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
-    
+
     AFJSONRequestSerializer *serializer = [AFJSONRequestSerializer serializer];
     [serializer setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
     [serializer setValue:@"application/json" forHTTPHeaderField:@"Accept"];
     manager.requestSerializer = serializer;
-    
+
     manager.responseSerializer = [AFJSONResponseSerializer serializerWithReadingOptions:NSJSONReadingAllowFragments];
-    
+
     manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"text/plain",nil];
     manager.responseSerializer = [AFJSONResponseSerializer serializer];
-    
+
     [manager.requestSerializer setValue:LiveAgentApi.sessionKey forHTTPHeaderField:X_LIVEAGENT_SESSION_KEY];
     [manager.requestSerializer setValue:@"null" forHTTPHeaderField:X_LIVEAGENT_AFFINITY];
     [manager.requestSerializer setValue:@"1" forHTTPHeaderField:X_LIVEAGENT_SEQUENCE];
     [manager.requestSerializer setValue:API_V forHTTPHeaderField:X_LIVEAGENT_API_VERSION];
-    
+
     [manager POST:ChasitorInit_path parameters:parameters progress:nil
           success:^(NSURLSessionDataTask *task, id responseObject) {
+
               LiveAgentApi.hasEnded = false;
               [self checkAvailability];
-          } failure:^(NSURLSessionDataTask *task, NSError *error) {
-              
-              if (task.response.statusCode == 200 || task.response.statusCode == 204) {
+          }
+          failure:^(NSURLSessionDataTask *task, NSError *error) {
+              NSInteger statusCode = ((NSHTTPURLResponse*)task.response).statusCode;
+
+              if (statusCode == 200 || statusCode == 204) {
                   LiveAgentApi.hasEnded = false;
                   [self checkAvailability];
               } else {
                   [self.activityHUD showWithText:@"failed to connect" shimmering:YES];
                   [self.activityHUD dismissWithText:@"failed to connect" delay:3 success:NO];
-                  
-                  LiveAgentApi.agentName =@"";
-                  LiveAgentApi.agentId   =@"";
-                  
+
+                  LiveAgentApi.agentName = @"";
+                  LiveAgentApi.agentId   = @"";
+
                   NSString* errResponse = [[NSString alloc] initWithData:(NSData *)error.userInfo[AFNetworkingOperationFailingURLResponseDataErrorKey] encoding:NSUTF8StringEncoding];
-                  
+
                   NSLog(@"Error: %@", error);
                   NSLog(@"response %@",errResponse);
-                  NSLog(@"response code %ld",task.response.statusCode);
+                  NSLog(@"response code %ld",statusCode);
               }
-          }];
+          } ];
 }
 
 - (void) updateStatus {
@@ -173,98 +165,88 @@
     }
     
     [self.activityHUD showWithText:@"waiting for an agent..." shimmering:YES];
-    FSNConnection *connection =
-    [FSNConnection withUrl:[[NSURL alloc] initWithString:Messages_path]
-                    method:FSNRequestMethodGET
-                   headers:[LiveAgentApi getHeaders]
-                parameters:nil
-                parseBlock:^id(FSNConnection *c, NSError **error) {
-                    return [c.responseData dictionaryFromJSONWithError:error];
-                }
-           completionBlock:^(FSNConnection *json) {
-               if (json.didSucceed) {
-                   NSDictionary *dictionary = (NSDictionary *)json.parseResult;
-                   
-                   NSArray* messages = [dictionary objectForKey:@"messages"];
-                   NSDictionary *lastMessage = messages.firstObject;
-                   
-                   NSLog(@"%@", [lastMessage objectForKey:@"type"]);
-                   
-                   if ([[lastMessage objectForKey:@"type"]  isEqual: @"ChatRequestSuccess"]) {
-                       _requestStatus.text = @"ChatRequestSuccess";
-                   }
-                   
-                   if ([[lastMessage objectForKey:@"type"]  isEqual: @"ChatEstablished"]) {
-                       [self.activityHUD dismiss];
-                       _statusResolved = true;
-                       
-                       NSDictionary *message  =[lastMessage objectForKey:@"message"];
-                       LiveAgentApi.agentName =[message objectForKey:@"name"];
-                       LiveAgentApi.agentId   =[message objectForKey:@"userId"];
-                       
-                       [self performSegueWithIdentifier:@"ChatViewController" sender:self];
-                   }
-                   
-                   if ([[lastMessage objectForKey:@"type"]  isEqual: @"QueueUpdate"]) {
-                       [self.activityHUD dismiss];
-                       [self.activityHUD showWithProgress];
-                   }
-                   
-                   if ([[lastMessage objectForKey:@"type"]  isEqual: @"ChatRequestFail"]) {
-                       _statusResolved = true;
-                       
-                       [self.activityHUD dismissWithText:@"chat request failed." delay:0.7 success:NO];
-                   }
-                   
-                   [self updateStatus];
-               }else if (json.httpResponse.statusCode == 503){
-                   //[self ResyncSession];
-               } else {
-                   [self updateStatus];
-               }
-           } progressBlock:^(FSNConnection *c) {}];
-    [connection start];
+    
+    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
+    [LiveAgentApi fillHeaders:manager];
+    
+    [manager GET:Messages_path parameters:nil progress:nil success:^(NSURLSessionTask *task, id responseObject) {
+        NSDictionary *dictionary = (NSDictionary *)responseObject;
+        
+        NSArray* messages = [dictionary objectForKey:@"messages"];
+        NSDictionary *lastMessage = messages.firstObject;
+        
+        NSLog(@"%@", [lastMessage objectForKey:@"type"]);
+        
+        if ([[lastMessage objectForKey:@"type"]  isEqual: @"ChatRequestSuccess"]) {
+            _requestStatus.text = @"ChatRequestSuccess";
+        }
+        
+        if ([[lastMessage objectForKey:@"type"]  isEqual: @"ChatEstablished"]) {
+            [self.activityHUD dismiss];
+            _statusResolved = true;
+            
+            NSDictionary *message  =[lastMessage objectForKey:@"message"];
+            LiveAgentApi.agentName =[message objectForKey:@"name"];
+            LiveAgentApi.agentId   =[message objectForKey:@"userId"];
+            
+            [self performSegueWithIdentifier:@"ChatViewController" sender:self];
+        }
+        
+        if ([[lastMessage objectForKey:@"type"]  isEqual: @"QueueUpdate"]) {
+            [self.activityHUD dismiss];
+            [self.activityHUD showWithProgress];
+        }
+        
+        if ([[lastMessage objectForKey:@"type"]  isEqual: @"ChatRequestFail"]) {
+            _statusResolved = true;
+            
+            [self.activityHUD dismissWithText:@"chat request failed." delay:0.7 success:NO];
+        }
+        
+        [self updateStatus];
+    } failure:^(NSURLSessionTask *operation, NSError *error) {
+        NSLog(@"Error: %@", error);
+        
+        [self updateStatus];
+    }];
 }
 
 - (void) checkAvailability {
     
-    [self.activityHUD showWithText:@"connecting..." shimmering:YES];
-    FSNConnection *connection =
-    [FSNConnection withUrl:[[NSURL alloc] initWithString:Availability_path]
-                    method:FSNRequestMethodGET
-                   headers:@{ X_LIVEAGENT_API_VERSION : API_V}
-                parameters:@{
-                             @"org_id"           : ORG_ID,
-                             @"deployment_id"    : DEPLOYEMENT_ID,
-                             @"Availability.ids" : BUTTON_ID
-                             }
-                parseBlock:^id(FSNConnection *c, NSError **error) {
-                    return [c.responseData dictionaryFromJSONWithError:error];
-                }
-           completionBlock:^(FSNConnection *json) {
-               if (json.didSucceed) {
-                   NSDictionary *dictionary = (NSDictionary *)json.parseResult;
-                   
-                   NSArray* messages = [dictionary objectForKey:@"messages"];
-                   NSDictionary *lastMessage = messages.firstObject;
-                   
-                   NSDictionary* message = [lastMessage objectForKey:@"message"];
-                   NSArray* results = [message objectForKey:@"results"];
-                   
-                   NSDictionary *availability = results.firstObject;
-                   
-                   if ((bool)[availability objectForKey:@"isAvailable"]) {
-                       [self updateStatus];
-                   } else {
-                       dispatch_async(dispatch_get_main_queue(), ^{
-                           [self.activityHUD dismissWithText:@"no agent is currently online." delay:0.7 success:NO];
-                       });
-                   }
-               } else {
-                   [self.activityHUD dismissWithText:@"can not connect." delay:0.7 success:NO];
-               }
-           } progressBlock:^(FSNConnection *c) {}];
-    [connection start];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.activityHUD showWithText:@"connecting..." shimmering:YES];
+    });
+    
+    AFHTTPSessionManager *request = [AFHTTPSessionManager manager];
+    
+    [request.requestSerializer setValue:API_V forHTTPHeaderField:X_LIVEAGENT_API_VERSION];
+    
+    [request GET:Availability_path parameters:@{
+                                                @"org_id"           : ORG_ID,
+                                                @"deployment_id"    : DEPLOYEMENT_ID,
+                                                @"Availability.ids" : BUTTON_ID
+                                                }
+        progress:nil success:^(NSURLSessionTask *task, id responseObject) {
+        NSDictionary *dictionary = (NSDictionary *)responseObject;
+        NSArray* messages = [dictionary objectForKey:@"messages"];
+        NSDictionary *lastMessage = messages.firstObject;
+        
+        NSDictionary* message = [lastMessage objectForKey:@"message"];
+        NSArray* results = [message objectForKey:@"results"];
+        
+        NSDictionary *availability = results.firstObject;
+        
+        if ((bool)[availability objectForKey:@"isAvailable"]) {
+            [self updateStatus];
+        } else {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.activityHUD dismissWithText:@"no agent is currently online." delay:3 success:NO];
+            });
+        }
+    } failure:^(NSURLSessionTask *operation, NSError *error) {
+        NSLog(@"Error: %@", error);
+        [self.activityHUD dismissWithText:@"can not connect." delay:0.7 success:NO];
+    }];
 }
 
 - (IBAction)requestChat:(id)sender {

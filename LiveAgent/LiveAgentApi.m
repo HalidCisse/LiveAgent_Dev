@@ -9,6 +9,7 @@
 #import "JSQMessages.h"
 #import "LiveAgentApi.h"
 #import "Constants.h"
+#import "AFNetworking.h"
 
 @implementation LiveAgentApi
 
@@ -56,6 +57,13 @@ static NSMutableArray* messages;
               X_LIVEAGENT_SEQUENCE    : sessionSequence,
               X_LIVEAGENT_API_VERSION : API_V
               };
+}
+
++ (void)fillHeaders:(AFHTTPSessionManager*) manager {
+    [manager.requestSerializer setValue:sessionKey           forHTTPHeaderField:X_LIVEAGENT_SESSION_KEY];
+    [manager.requestSerializer setValue:sessionAffinityToken forHTTPHeaderField:X_LIVEAGENT_AFFINITY];
+    [manager.requestSerializer setValue:sessionSequence      forHTTPHeaderField:X_LIVEAGENT_SEQUENCE];
+    [manager.requestSerializer setValue:API_V                forHTTPHeaderField:X_LIVEAGENT_API_VERSION];
 }
 
 + (NSString *) agentInitial {
